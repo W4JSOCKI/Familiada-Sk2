@@ -1,0 +1,20 @@
+Liczba graczy
+Nick 1 
+Nick 2 (jeżeli jeszcze nie ma tylu to 0 żeby nie było pustej linii)
+Nick 3
+Nick 4
+Nick 5
+Nick 6
+Numer rundy
+Punkty team 1
+Punkty team 2
+Błędy team 1
+Błędy team 2
+Pytanie
+Liczba odpowiedzi
+Gracz proszony o odpowiedź 
+Czas zaończenia tury gracza
+Czy ostatnia odpowiedź była poprawna 
+Odp1 Punkty
+Odp2 Punkty
+Odp3 Punkty
