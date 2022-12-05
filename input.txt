@@ -18,3 +18,15 @@ Czy ostatnia odpowiedź była poprawna
 Odp1 Punkty
 Odp2 Punkty
 Odp3 Punkty
+
+
+
+Czy ostatnia odpowiedź była poprawna nie jest do końca potrzebne bo będzie to widać po punktach i błędach, ale może ci tak być wygodniej,
+daj znać to zaimplementuję to albo nie
+Od 18 linijki możesz po prostu wyświetlać całą resztę na tablicy bo zrobię te odpowiedzi ze strony serwera w takim formacie żebyś tego nie musiał 
+dzielić na numer odpowiedzi punkty itp. tylko będą stringi:
+1. Okoń 41
+2. Szczupak 26
+3. -
+4. Łosoś 13
+5. -
