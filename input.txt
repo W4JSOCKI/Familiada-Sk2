@@ -30,3 +30,8 @@ dzielić na numer odpowiedzi punkty itp. tylko będą stringi:
 3. -
 4. Łosoś 13
 5. -
+
+-liczba graczy nie jest wogóle potrzebna bo bez 6 nicków i tak nie zaczniemy gry
+-zamiast 0 na brak gracza dałbym jakiś znak specjalny co nie może być wpisany z klawiatury
+-zamieniłbym kolejność tak żeby pytanie było bezpośrednio przed odpowiedziami bo je też chce wyświetlić
+-chyba nie potrzebuje poprawnej odpowiedzi bo klient i tak nic z nią nie zrobi
