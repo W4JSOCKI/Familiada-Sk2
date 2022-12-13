@@ -10,14 +10,15 @@ Punkty team 1
 Punkty team 2
 Błędy team 1
 Błędy team 2
-Pytanie
-Liczba odpowiedzi
 Gracz proszony o odpowiedź 
 Czas zaończenia tury gracza
 Czy ostatnia odpowiedź była poprawna 
+Liczba odpowiedzi
+Pytanie
 Odp1 Punkty
 Odp2 Punkty
 Odp3 Punkty
+
 
 
 
@@ -35,3 +36,5 @@ dzielić na numer odpowiedzi punkty itp. tylko będą stringi:
 -zamiast 0 na brak gracza dałbym jakiś znak specjalny co nie może być wpisany z klawiatury
 -zamieniłbym kolejność tak żeby pytanie było bezpośrednio przed odpowiedziami bo je też chce wyświetlić
 -chyba nie potrzebuje poprawnej odpowiedzi bo klient i tak nic z nią nie zrobi
+
+teoretycznie wszystko można wpisać z klawiatury jak masz odpowiednie ustawienia, żeby nas nie ztrollował możemy to kontrolować albo właśnie liczbą graczy albo dać jakiś warunek co do nicku że np musi mieć więcej niż 2 znaki albo nie może być 0
