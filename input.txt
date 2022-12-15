@@ -12,7 +12,6 @@ Błędy team 1
 Błędy team 2
 Gracz proszony o odpowiedź 
 Czas zaończenia tury gracza
-Czy ostatnia odpowiedź była poprawna 
 Liczba odpowiedzi
 Pytanie
 Odp1 Punkty
