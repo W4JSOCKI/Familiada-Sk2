@@ -17,7 +17,9 @@ Pytanie
 Odp1 Punkty
 Odp2 Punkty
 Odp3 Punkty
-
+Poprzednia odp 1
+...
+Poprzednia odp n
 
 
 
@@ -37,3 +39,6 @@ dzielić na numer odpowiedzi punkty itp. tylko będą stringi:
 -chyba nie potrzebuje poprawnej odpowiedzi bo klient i tak nic z nią nie zrobi
 
 teoretycznie wszystko można wpisać z klawiatury jak masz odpowiednie ustawienia, żeby nas nie ztrollował możemy to kontrolować albo właśnie liczbą graczy albo dać jakiś warunek co do nicku że np musi mieć więcej niż 2 znaki albo nie może być 0
+
+potrzebujemy jeszcze odpowiedzi poprzednich pytanych osób
+tylko pytanie ile ich może max być
