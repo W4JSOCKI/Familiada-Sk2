@@ -1,4 +1,5 @@
 import PySimpleGUI as sg
+import time
 
 info = {
     "playersNumber": -1,
@@ -19,7 +20,10 @@ info = {
     "question": "que",
     "correct1": "cor1",
     "correct2": "cor2",
-    "correct3": "cor3"
+    "correct3": "cor3",
+    "previous1": "prev1",
+    "previous2": "prev2",
+    "previous3": "prev3"
 }
 
 layouts = {
@@ -42,18 +46,19 @@ def createLayouts(nick):
                                 [sg.Text("Points: "), sg.Text(info["t2Points"], key="t2Points")],
                                 [sg.Text("Errors: "), sg.Text(info["t2Errors"], key="t2Errors")]]
 
-    layouts["questionsLayout"] = [[sg.Text(info.get("question"), key="question")],
-                                  [sg.Text(info.get("correct1"), key="correct1")],
-                                  [sg.Text(info.get("correct2"), key="correct2")],
-                                  [sg.Text(info.get("correct3"), key="correct3")]]
-
-    layouts["answerLayout"] = [[sg.Text("Time left:"), sg.Text(info["timeLeft"], key="timeLeft")],
-                               [sg.Text("Answer:"), sg.InputText(key="answer")]]
+    layouts["questionsLayout"] = [[sg.Text(info["question"], key="question")],
+                                  [sg.Text(info["correct1"], key="correct1")],
+                                  [sg.Text(info["correct2"], key="correct2")],
+                                  [sg.Text(info["correct3"], key="correct3")]]
+    
+    layouts["previousAnswersLayout"] = [[sg.Text(info["previous1"], key="previous1")],
+                                  [sg.Text(info["previous2"], key="previous2")],
+                                  [sg.Text(info["previous3"], key="previous3")],]
 
     layouts["mainLayout"] = [[sg.Frame("Blue team", layouts["blueTeamLayout"], expand_x=True, key="blueTeamLayout")],
                              [sg.Frame("Questions", layouts["questionsLayout"], expand_x=True, key="questionsLayout")],
                              [sg.Frame("Red team", layouts["redTeamLayout"], expand_x=True, key="redTeamLayout")],
-                             [sg.Frame("Answer", layouts["answerLayout"], expand_x=True, visible=False, key="answerLayout")],
+                             [sg.Frame("Previous answers", layouts["previousAnswersLayout"], expand_x=True, key="previousAnswersLayout")],
                              [sg.Text("                                                                                                  ")],
                              [sg.Button('Ok'), sg.Button('Exit')]]
 
@@ -83,6 +88,9 @@ def reload(newInfo):
     info["correct1"] = lines[16]
     info["correct2"] = lines[17]
     info["correct3"] = lines[18]
+    info["previous1"] = lines[19]
+    info["previous2"] = lines[20]
+    info["previous3"] = lines[21]
 
 
 def refresh():
@@ -104,13 +112,37 @@ def refresh():
     mainWindow["correct2"].update(info["correct2"])
     mainWindow["correct3"].update(info["correct3"])
 
-def answer():
-    mainWindow["timeLeft"].update(info["timeLeft"])
-    mainWindow["answerLayout"].update(visible = True)
+    mainWindow["previous1"].update(info["previous1"])
+    mainWindow["previous2"].update(info["previous2"])
+    mainWindow["previous3"].update(info["previous3"])
 
-def endAnswer():
-    mainWindow["answerLayout"].update(visible = False)
-    # not working
+def answerWindow():
+
+    timeStart = time.time()
+    timeLeft = 10 #info["timeLeft"]
+    currTime = timeLeft
+    layouts["answerLayout"] = [[sg.Text(info["question"], key="question")],
+                               [sg.Text("Time left:"), sg.Text(info["timeLeft"], key="timeLeft")],
+                               [sg.Text("Answer:"), sg.InputText(key="answer")],
+                               [sg.Button('Ok')]]
+
+    answerWindow = sg.Window("Answer", layouts["answerLayout"], modal=True, finalize=True, disable_close=True)
+    answerWindow["answer"].bind("<Return>", "_Enter")
+
+    while True:
+        currTime = (int)(timeLeft-(time.time()-timeStart))
+        answerWindow["timeLeft"].update(currTime)
+        event, values = answerWindow.read(timeout=10)
+        if event in ('Ok', "answer" + "_Enter") or currTime<=0:
+            giveAnswer(values["answer"], currTime)
+            break
+
+    answerWindow.close()
+
+
+def giveAnswer(answer, timeleft):
+    # TODO ask server
+    print(answer, timeleft)
 
 
 def validateNickname(nickname):
@@ -119,6 +151,16 @@ def validateNickname(nickname):
         return True
     return False
 
+def gameOver(winner: bool):
+    layouts["gameOver"] = [[sg.Text("You won!" if winner else "You lost!")],
+                          [sg.Button("Exit")]]
+
+    gameOverWindow = sg.Window("Game Over", layouts["gameOver"], finalize=True)
+
+    while True:
+        event, values = gameOverWindow.read()
+        if event in (sg.WIN_CLOSED, 'Exit'):
+            exit()
 
 
 def main():
@@ -140,18 +182,15 @@ def main():
     loginWindow.close()
     createLayouts(nickname)
     mainWindow = sg.Window('Familiada', layouts["mainLayout"], finalize=True)
-    mainWindow["answer"].bind("<Return>", "_Enter")
 
     while True:
         event, values = mainWindow.read()
         if event in (sg.WIN_CLOSED, 'Exit'):
             break
-        if event in ('Ok', "answer" + "_Enter"):
-            print('You entered ', values["answer"])
-            endAnswer()
         info["name1"] = "asdasdad"
         refresh()
-        answer()
+        answerWindow()
+        gameOver(True)
 
     mainWindow.close()
 
