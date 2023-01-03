@@ -47,12 +47,14 @@ class Game {
     string question;
     string responses[5];
     short points[5];// points per response
+    
 
     short team1points,team2points;
     short team1fails,team2fails;
     short buttonwin;// who won clash at the button 0-during clash 1-team1 2-team2
     short point_multiplier;// first 3 rounds = 1 then goes one up every round;
     short point_treshhold =300; // points needed to win the game
+    short used_questions [15];
     
   public:  Game(int newid){
         id=newid;
@@ -74,6 +76,9 @@ class Game {
     int pointvalue [1001][6];
    
     void loaddata(){ // not sure if it should be in Game class
+        
+        memset(used_questions,0,sizeof(used_questions));
+        
        string line;
        ifstream baza;
        baza.open("Baza.csv");
@@ -93,6 +98,21 @@ class Game {
 
     }
     
+   int chose_question( ) {
+
+    srand( (unsigned)time( NULL ) );
+    int r=1 + (rand() % ( 1000 - 1 + 1 ));
+    for(int i=0; i <15; i++){
+        if(used_questions[i]==r)
+          return chose_question();// chose random nuber again with recurency;
+        else if(used_questions[i]==0){
+           used_questions[i]=r;
+           return r;
+        }
+    }
+   
+}
+    
     public: int addplayer(Player NewPlayer){
         if(how_many_players < 6){
         players.push_back(NewPlayer);
@@ -111,6 +131,16 @@ class Game {
             } 
         }
         return -1;
+    }
+    
+    
+    
+    int play(){
+        if(how_many_players==6){
+            cout << "There is " << how_many_players << " players, we need 6 to start" << endl;
+            return -1;
+        }
+        
     }
                                                      
 };
