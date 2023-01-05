@@ -48,7 +48,7 @@ class Game {
     string responses[5];
     short points[5];// points per response
     
-
+    short temp_points;
     short team1points,team2points;
     short team1fails,team2fails;
     short buttonwin;// who won clash at the button 0-during clash 1-team1 2-team2
@@ -73,9 +73,9 @@ class Game {
     public:
     string questions [1001];
     string answers [1001][6];
-    int pointvalue [1001][6];
+    int pointvalue [1001][6];// points for each answer
    
-    void loaddata(){ // not sure if it should be in Game class
+    void loaddata(){ // not sure if it should be in Game class, loads questions answers and points from file to arrays
         
         memset(used_questions,0,sizeof(used_questions));
         
@@ -100,20 +100,19 @@ class Game {
 
     }
     
-   int chose_question( ) {
-
-    srand( (unsigned)time( NULL ) );
-    int r=1 + (rand() % ( 1000 - 1 + 1 ));
-    for(int i=0; i <15; i++){
-        if(used_questions[i]==r)
-          return chose_question();// chose random number again with recurency;
-        else if(used_questions[i]==0){
-           used_questions[i]=r;
-           return r;
+   int chose_question( ) {// returns unique int in range 1-1000 so we can chose questions from array
+        int r=1 + (rand() % ( 1000 - 1 + 1 ));
+        for(int i=0; i <15; i++){
+            if(used_questions[i]==r)
+                return chose_question();// chose random number again with recurency;
+            else if(used_questions[i]==0){
+                used_questions[i]=r;
+                return r;
+            }
+            else return r;
         }
-    }
    
-}
+    }   
     
     public: int addplayer(Player NewPlayer){
         if(how_many_players < 6){
@@ -124,7 +123,7 @@ class Game {
             return -1;
     }
     
-     int removeplayer(int id){
+    int removeplayer(int id){
         for(int i =0; i<6;i++){
             if(players[i].getid()==id){
                 players.erase(players.begin()+i);
@@ -133,6 +132,36 @@ class Game {
             } 
         }
         return -1;
+    }
+
+    int take_answer(int player_n){// return response number if correct and -1 if incorrect
+
+        ifstream a_file;
+        a_file.open("C:/Programowanie/Familiada-Sk2/Answers.txt");//TODO take answer from socket
+
+        string given_answer;
+        getline(a_file,given_answer);
+
+        for(int i=0; i<5;i++){
+            if(given_answer==responses[i]){
+                temp_points+=points[i];
+                return i;
+            }
+        }
+
+        return -1;
+
+
+    }
+
+    int button_phase(){// first phase of the game
+
+        int clash_player_1= (round-1)%3;
+        int clash_player_2= (round-1)%3+3;
+        buttonwin=1+rand()%2;// TODO (which player press button first)
+
+        
+
     }
     
     
@@ -147,7 +176,7 @@ class Game {
                                                      
 };
 int main()
-{
+{   srand( time( NULL ) );
     Game test(1);
     Player player1(1);
     Player player2(2);
@@ -156,11 +185,15 @@ int main()
     cout << test.addplayer(player1) << endl;
     cout << test.addplayer(player2) << endl;
     test.loaddata();
+
+   
+
+    /*
     for(int i=1; i<50; i++)
     {
         cout << test.questions[i] << endl;
         for(int j=1; j<6; j++)
        cout << test.answers[i][j] << " " <<  test.pointvalue[i][j] << endl;
-    }
+    }*/ //checking if database loads correctly
     return 0;
 }
