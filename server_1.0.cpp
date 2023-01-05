@@ -104,7 +104,7 @@ class Game {
     int r=1 + (rand() % ( 1000 - 1 + 1 ));
     for(int i=0; i <15; i++){
         if(used_questions[i]==r)
-          return chose_question();// chose random nuber again with recurency;
+          return chose_question();// chose random number again with recurency;
         else if(used_questions[i]==0){
            used_questions[i]=r;
            return r;
