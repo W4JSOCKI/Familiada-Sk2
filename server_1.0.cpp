@@ -81,20 +81,22 @@ class Game {
         
        string line;
        ifstream baza;
-       baza.open("Baza.csv");
+       baza.open("C:/Programowanie/Familiada-Sk2/Baza.csv");
+    
+       
        for(int i=1; i<1001; i++){
         getline(baza,line);
-        cout << line << endl;
+     
         stringstream linestream(line);
         getline(linestream,questions[i],';');
         for(int j=1; j<6; j++){
             getline(linestream,answers[i][j],';');
             string p;
             getline(linestream,p,';');
-           // pointvalue[i][j]=stoi(p);
+           pointvalue[i][j]=stoi(p);
         }
        }
-      // baza.close();
+      baza.close();
 
     }
     
@@ -157,8 +159,8 @@ int main()
     for(int i=1; i<50; i++)
     {
         cout << test.questions[i] << endl;
-       // for(int j=1; j<6; j++)
-   //     cout << test.answers[i][j] << " " << endl;// test.pointvalue[i][j] << endl;
+        for(int j=1; j<6; j++)
+       cout << test.answers[i][j] << " " <<  test.pointvalue[i][j] << endl;
     }
     return 0;
 }
