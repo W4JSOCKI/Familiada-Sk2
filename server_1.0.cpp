@@ -188,12 +188,12 @@ int main()
 
    
 
-    /*
+   
     for(int i=1; i<50; i++)
     {
         cout << test.questions[i] << endl;
         for(int j=1; j<6; j++)
        cout << test.answers[i][j] << " " <<  test.pointvalue[i][j] << endl;
-    }*/ //checking if database loads correctly
+    }//checking if database loads correctly
     return 0;
 }
