@@ -81,7 +81,7 @@ class Game {
         
        string line;
        ifstream baza;
-       baza.open("C:/Programowanie/Familiada-Sk2/Baza.csv");
+       baza.open("Baza.csv");
     
        
        for(int i=1; i<1001; i++){
@@ -137,7 +137,7 @@ class Game {
     int take_answer(int player_n){// return response number if correct and -1 if incorrect
 
         ifstream a_file;
-        a_file.open("C:/Programowanie/Familiada-Sk2/Answers.txt");//TODO take answer from socket
+        a_file.open("Answers.txt");//TODO take answer from socket
 
         string given_answer;
         getline(a_file,given_answer);
