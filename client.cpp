@@ -47,7 +47,7 @@ int main(int argc, char ** argv){
 	
 /****************************/
 	while(1){
-	cout << "read from stdin, write to socket" << endl;
+	
 	ssize_t bufsize2 = 255, received2;
 	char buffer2[bufsize2];
 	int fdi=open("in.txt",0);

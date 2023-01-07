@@ -21,6 +21,7 @@
 #include <signal.h>
 #include <error.h>
 
+
 using namespace std;
 
 class Client;
@@ -158,7 +159,6 @@ void ctrl_c(int){
 
 void sendToAllBut(int fd, char * buffer, int count){
     auto it = clients.begin();
-    cout << &buffer << endl;
     while(it!=clients.end()){
         Client * client = *it;
         it++;
@@ -293,7 +293,7 @@ class Game {
     int take_answer(int player_n){// return response number if correct and -1 if incorrect
 
         ifstream a_file;
-        a_file.open("C:/Programowanie/Familiada-Sk2/Answers.txt");//TODO take answer from socket
+        a_file.open("Answers.txt");//TODO take answer from socket
 
         string given_answer;
         getline(a_file,given_answer);
