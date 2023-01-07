@@ -1,9 +1,8 @@
 import PySimpleGUI as sg
 import time
-import os
 
 info = {
-    "playersNumber": -1,
+    "playerID": -1,
     "nick1": "n1",
     "nick2": "n2",
     "nick3": "n3",
@@ -129,15 +128,15 @@ def answerWindow():
 
 
 def giveAnswer(answer, timeleft):
-    # TODO ask server
-    print(answer, timeleft)
+    f = open("answer.txt", "w")
+    f.write(answer + "\n" + timeleft)
+    f.close()
 
 
-def validateNickname(nickname):
-    # TODO ask server
-    if nickname in getNicknames():
-        return True
-    return False
+def sendNickname(nickname):
+    f = open("name.txt", "w")
+    f.write(nickname)
+    f.close()
 
 def gameOver(winner: bool):
     layouts["gameOver"] = [[sg.Text("You won!" if winner else "You lost!")],
@@ -150,10 +149,8 @@ def gameOver(winner: bool):
         if event in (sg.WIN_CLOSED, 'Exit'):
             exit()
 
-
 def main():
     global mainWindow
-    os.system("client.exe")
     nickname = ""
 
     loginWindow = sg.Window("Login", layouts["getNicknameLayout"], finalize=True)
@@ -164,9 +161,8 @@ def main():
         if event in (sg.WIN_CLOSED, 'Exit'):
             exit()
         if event in ('Ok', "inputNickname" + "_Enter"):
-            nickname = values["inputNickname"]
-            if validateNickname(nickname):
-                break
+            sendNickname(values["inputNickname"])
+            break
 
     loginWindow.close()
     createLayouts(nickname)

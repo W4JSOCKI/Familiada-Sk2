@@ -1,4 +1,4 @@
-Liczba graczy
+Player id
 Nick 1 
 Nick 2 (jeżeli jeszcze nie ma tylu to 0 żeby nie było pustej linii)
 Nick 3
