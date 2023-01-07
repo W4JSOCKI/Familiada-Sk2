@@ -8,15 +8,20 @@
 #include <sys/epoll.h>
 #include <poll.h> 
 #include <thread>
+#include <fcntl.h>
+#include <iostream>
+using namespace std;
 
 ssize_t readData(int fd, char * buffer, ssize_t buffsize){
-	auto ret = recv(fd, buffer, buffsize, MSG_WAITALL);
+	auto ret = read(fd, buffer, buffsize);
+	cout << "read from " << fd << endl;
 	if(ret==-1) error(1,errno, "read failed on descriptor %d", fd);
 	return ret;
 }
 
 void writeData(int fd, char * buffer, ssize_t count){
 	auto ret = write(fd, buffer, count);
+	cout << "write to " << fd << endl;
 	if(ret==-1) error(1, errno, "write failed on descriptor %d", fd);
 	if(ret!=count) error(0, errno, "wrote less than requested to descriptor %d (%ld/%ld)", fd, count, ret);
 }
@@ -32,7 +37,7 @@ int main(int argc, char ** argv){
 	// create socket
 	int sock = socket(resolved->ai_family, resolved->ai_socktype, 0);
 	if(sock == -1) error(1, errno, "socket failed");
-	
+	cout << "socket" << endl;
 	// attept to connect
 	res = connect(sock, resolved->ai_addr, resolved->ai_addrlen);
 	if(res) error(1, errno, "connect failed");
@@ -41,8 +46,19 @@ int main(int argc, char ** argv){
 	freeaddrinfo(resolved);
 	
 /****************************/
+	while(1){
+	cout << "read from stdin, write to socket" << endl;
+	ssize_t bufsize2 = 255, received2;
+	char buffer2[bufsize2];
+	int fdi=open("in.txt",0);
+	received2 = readData(fdi, buffer2, bufsize2);
+	writeData(sock, buffer2, received2);
+	cout << "XD" << endl;
 	
-	// read from socket, write to stdout
+	
+	
+	
+	 cout << "read from socket, write to stdout" << endl;
 	ssize_t bufsize1 = 255, received1;
 	char buffer1[bufsize1];
 	received1 = readData(sock, buffer1, bufsize1);
@@ -50,14 +66,9 @@ int main(int argc, char ** argv){
 	
 /****************************/
 	
-	// read from stdin, write to socket
-	ssize_t bufsize2 = 255, received2;
-	char buffer2[bufsize2];
-	received2 = readData(0, buffer2, bufsize2);
-	writeData(sock, buffer2, received2);
 	
 /****************************/
-	
+	}
 	close(sock);
 	
 	return 0;
