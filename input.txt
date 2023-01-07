@@ -17,6 +17,8 @@ Pytanie
 Odp1 Punkty
 Odp2 Punkty
 Odp3 Punkty
+Odp4 Punkty
+Odp5 Punkty
 Poprzednia odp 1
 ...
 Poprzednia odp n

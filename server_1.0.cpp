@@ -290,13 +290,7 @@ class Game {
         return -1;
     }
 
-    int take_answer(int player_n){// return response number if correct and -1 if incorrect
-
-        ifstream a_file;
-        a_file.open("Answers.txt");//TODO take answer from socket
-
-        string given_answer;
-        getline(a_file,given_answer);
+    int check_answer(string given_answer){// return response number if correct and -1 if incorrect
 
         for(int i=0; i<5;i++){
             if(given_answer==responses[i]){
@@ -306,8 +300,6 @@ class Game {
         }
 
         return -1;
-
-
     }
 
     int button_phase(){// first phase of the game
@@ -316,8 +308,7 @@ class Game {
         int clash_player_2= (round-1)%3+3;
         buttonwin=1+rand()%2;// TODO (which player press button first)
 
-        
-
+    
     }
     
     
