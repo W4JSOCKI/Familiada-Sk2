@@ -10,7 +10,7 @@
 #include <thread>
 
 ssize_t readData(int fd, char * buffer, ssize_t buffsize){
-	auto ret = read(fd, buffer, buffsize);
+	auto ret = recv(fd, buffer, buffsize, MSG_WAITALL);
 	if(ret==-1) error(1,errno, "read failed on descriptor %d", fd);
 	return ret;
 }
