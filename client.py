@@ -1,5 +1,6 @@
 import PySimpleGUI as sg
 import time
+import os
 
 info = {
     "playersNumber": -1,
@@ -21,6 +22,8 @@ info = {
     "correct1": "cor1",
     "correct2": "cor2",
     "correct3": "cor3",
+    "correct4": "cor4",
+    "correct5": "cor5",
     "previous1": "prev1",
     "previous2": "prev2",
     "previous3": "prev3"
@@ -49,7 +52,9 @@ def createLayouts(nick):
     layouts["questionsLayout"] = [[sg.Text(info["question"], key="question")],
                                   [sg.Text(info["correct1"], key="correct1")],
                                   [sg.Text(info["correct2"], key="correct2")],
-                                  [sg.Text(info["correct3"], key="correct3")]]
+                                  [sg.Text(info["correct3"], key="correct3")],
+                                  [sg.Text(info["correct4"], key="correct4")],
+                                  [sg.Text(info["correct5"], key="correct5")],]
     
     layouts["previousAnswersLayout"] = [[sg.Text(info["previous1"], key="previous1")],
                                   [sg.Text(info["previous2"], key="previous2")],
@@ -69,28 +74,10 @@ def getNicknames():
 
 def reload(newInfo):
     lines = newInfo.split("\n")
-    info["playersNumber"] = lines[0]
-    info["nick1"] = lines[1]
-    info["nick2"] = lines[2]
-    info["nick3"] = lines[3]
-    info["nick4"] = lines[4]
-    info["nick5"] = lines[5]
-    info["nick6"] = lines[6]
-    info["roundNumber"] = lines[7]
-    info["t1Points"] = lines[8]
-    info["t2Points"] = lines[9]
-    info["t1Errors"] = lines[10]
-    info["t2Errors"] = lines[11]
-    info["answering"] = lines[12]
-    info["timeLeft"] = lines[13]
-    info["answersCount"] = lines[14]
-    info["question"] = lines[15]
-    info["correct1"] = lines[16]
-    info["correct2"] = lines[17]
-    info["correct3"] = lines[18]
-    info["previous1"] = lines[19]
-    info["previous2"] = lines[20]
-    info["previous3"] = lines[21]
+    i=0
+    for x in info.keys():
+        info[x] = lines[i]
+        i+=1
 
 
 def refresh():
@@ -98,7 +85,6 @@ def refresh():
     mainWindow["nick2"].update(info["nick2"])
     mainWindow["nick3"].update(info["nick3"])
     mainWindow["nick4"].update(info["nick4"])
-    mainWindow["nick1"].update(info["nick1"])
     mainWindow["nick5"].update(info["nick5"])
     mainWindow["nick6"].update(info["nick6"])
 
@@ -111,6 +97,8 @@ def refresh():
     mainWindow["correct1"].update(info["correct1"])
     mainWindow["correct2"].update(info["correct2"])
     mainWindow["correct3"].update(info["correct3"])
+    mainWindow["correct4"].update(info["correct4"])
+    mainWindow["correct5"].update(info["correct5"])
 
     mainWindow["previous1"].update(info["previous1"])
     mainWindow["previous2"].update(info["previous2"])
@@ -165,6 +153,7 @@ def gameOver(winner: bool):
 
 def main():
     global mainWindow
+    os.system("client.exe")
     nickname = ""
 
     loginWindow = sg.Window("Login", layouts["getNicknameLayout"], finalize=True)
