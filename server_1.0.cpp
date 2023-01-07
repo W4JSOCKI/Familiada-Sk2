@@ -19,7 +19,7 @@
 #include <sys/epoll.h>
 #include <unordered_set>
 #include <signal.h>
-
+#include <error.h>
 
 using namespace std;
 
@@ -158,6 +158,7 @@ void ctrl_c(int){
 
 void sendToAllBut(int fd, char * buffer, int count){
     auto it = clients.begin();
+    cout << &buffer << endl;
     while(it!=clients.end()){
         Client * client = *it;
         it++;
@@ -332,7 +333,7 @@ class Game {
 };
 
 
-int main()
+/*int main()
 {   srand( time( NULL ) );
     Game test(1);
     Player player1(1);
@@ -353,6 +354,6 @@ int main()
        cout << test.answers[i][j] << " " <<  test.pointvalue[i][j] << endl;
     }//checking if database loads correctly
     return 0;
-}
+}*/
 
 
