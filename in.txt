@@ -1,5 +1,23 @@
-test
-test2
-test3
-test 4
-aaaaaaaaaaaaaaa
+1
+Nick 1 
+Nick 2
+Nick 3
+Nick 4
+Nick 5
+Nick 6
+0
+11
+22
+33
+44
+2
+3
+Pytanie
+Odp1 Punkty
+Odp2 Punkty
+Odp3 Punkty
+Odp4 Punkty
+Odp5 Punkty
+zła odp 1
+zła odp 2
+zła odp 3

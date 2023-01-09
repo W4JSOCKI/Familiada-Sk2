@@ -10,8 +10,7 @@ Punkty team 1
 Punkty team 2
 Błędy team 1
 Błędy team 2
-Gracz proszony o odpowiedź 
-Czas zaończenia tury gracza
+Gracz proszony o odpowiedź
 Liczba odpowiedzi
 Pytanie
 Odp1 Punkty
@@ -19,11 +18,9 @@ Odp2 Punkty
 Odp3 Punkty
 Odp4 Punkty
 Odp5 Punkty
-Poprzednia odp 1
-...
-Poprzednia odp n
-
-
+zła odp 1
+zła odp 2
+zła odp 3
 
 Czy ostatnia odpowiedź była poprawna nie jest do końca potrzebne bo będzie to widać po punktach i błędach, ale może ci tak być wygodniej,
 daj znać to zaimplementuję to albo nie

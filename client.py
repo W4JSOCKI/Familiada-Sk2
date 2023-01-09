@@ -14,18 +14,17 @@ info = {
     "t2Points": 0,
     "t1Errors": 0,
     "t2Errors": 0,
-    "answersCount": -1,
     "answering": -1,
-    "timeLeft": -1,
+    "answersCount": -1,
     "question": "que",
     "correct1": "cor1",
     "correct2": "cor2",
     "correct3": "cor3",
     "correct4": "cor4",
     "correct5": "cor5",
-    "previous1": "prev1",
-    "previous2": "prev2",
-    "previous3": "prev3"
+    "wrong1": "prev1",
+    "wrong2": "prev2",
+    "wrong3": "prev3"
 }
 
 layouts = {
@@ -35,16 +34,16 @@ layouts = {
 }
 
 
-def createLayouts(nick):
-    layouts["blueTeamLayout"] = [[sg.Text(info["nick1"], text_color=("cyan" if nick == info["nick1"] else "blue"), key="nick1"),
-                                  sg.Text(info["nick2"], text_color=("cyan" if nick == info["nick2"] else "blue"), key="nick2"),
-                                  sg.Text(info["nick3"], text_color=("cyan" if nick == info["nick3"] else "blue"), key="nick3")],
+def createLayouts():
+    layouts["blueTeamLayout"] = [[sg.Text(info["nick1"], text_color=getPlayerColor(1), key="nick1"),
+                                  sg.Text(info["nick2"], text_color=getPlayerColor(2), key="nick2"),
+                                  sg.Text(info["nick3"], text_color=getPlayerColor(3), key="nick3")],
                                  [sg.Text("Points: "), sg.Text(info["t1Points"], key="t1Points")],
                                  [sg.Text("Errors: "), sg.Text(info["t1Errors"], key="t1Errors")]]
 
-    layouts["redTeamLayout"] = [[sg.Text(info["nick4"], text_color=("orange" if nick == info["nick4"] else "yellow"), key="nick4"),
-                                 sg.Text(info["nick5"], text_color=("orange" if nick == info["nick5"] else "yellow"), key="nick5"),
-                                 sg.Text(info["nick6"], text_color=("orange" if nick == info["nick6"] else "yellow"), key="nick6")],
+    layouts["redTeamLayout"] = [[sg.Text(info["nick4"], text_color=getPlayerColor(4), key="nick4"),
+                                 sg.Text(info["nick5"], text_color=getPlayerColor(5), key="nick5"),
+                                 sg.Text(info["nick6"], text_color=getPlayerColor(6), key="nick6")],
                                 [sg.Text("Points: "), sg.Text(info["t2Points"], key="t2Points")],
                                 [sg.Text("Errors: "), sg.Text(info["t2Errors"], key="t2Errors")]]
 
@@ -55,27 +54,44 @@ def createLayouts(nick):
                                   [sg.Text(info["correct4"], key="correct4")],
                                   [sg.Text(info["correct5"], key="correct5")],]
     
-    layouts["previousAnswersLayout"] = [[sg.Text(info["previous1"], key="previous1")],
-                                  [sg.Text(info["previous2"], key="previous2")],
-                                  [sg.Text(info["previous3"], key="previous3")],]
+    layouts["wrongAnswersLayout"] = [[sg.Text(info["wrong1"], key="wrong1")],
+                                  [sg.Text(info["wrong2"], key="wrong2")],
+                                  [sg.Text(info["wrong3"], key="wrong3")],]
 
     layouts["mainLayout"] = [[sg.Frame("Blue team", layouts["blueTeamLayout"], expand_x=True, key="blueTeamLayout")],
                              [sg.Frame("Questions", layouts["questionsLayout"], expand_x=True, key="questionsLayout")],
                              [sg.Frame("Red team", layouts["redTeamLayout"], expand_x=True, key="redTeamLayout")],
-                             [sg.Frame("Previous answers", layouts["previousAnswersLayout"], expand_x=True, key="previousAnswersLayout")],
+                             [sg.Frame("wrong answers", layouts["wrongAnswersLayout"], expand_x=True, key="wrongAnswersLayout")],
                              [sg.Text("                                                                                                  ")],
                              [sg.Button('Ok'), sg.Button('Exit')]]
 
+
+def getPlayerColor(id):
+    if id == info["answering"]:
+        return "purple"
+    if id == info["playerID"]:
+        if id > 3:
+            return "orange"
+        else:
+            return "cyan"
+    if id > 3:
+        return "darkRed"
+    else:
+        return "blue"
 
 def getNicknames():
     return [info['nick1'], info['nick2'], info['nick3'], info['nick4'], info['nick5'], info['nick6']]
 
 
-def reload(newInfo):
-    lines = newInfo.split("\n")
+def reload():
+    f = open("in.txt", "r")
+    lines = f.read().split("\n")
     i=0
     for x in info.keys():
-        info[x] = lines[i]
+        if x in ("playerID", "roundNumber", "t1Points", "t2Points", "t1Errors", "t2Errors", "answering", "answersCount"):
+            info[x] = int(lines[i])
+        else:
+            info[x] = lines[i]
         i+=1
 
 
@@ -86,6 +102,13 @@ def refresh():
     mainWindow["nick4"].update(info["nick4"])
     mainWindow["nick5"].update(info["nick5"])
     mainWindow["nick6"].update(info["nick6"])
+
+    mainWindow["nick1"].update(text_color=getPlayerColor(1))
+    mainWindow["nick2"].update(text_color=getPlayerColor(2))
+    mainWindow["nick3"].update(text_color=getPlayerColor(3))
+    mainWindow["nick4"].update(text_color=getPlayerColor(4))
+    mainWindow["nick5"].update(text_color=getPlayerColor(5))
+    mainWindow["nick6"].update(text_color=getPlayerColor(6))
 
     mainWindow["t1Points"].update(info["t1Points"])
     mainWindow["t2Points"].update(info["t2Points"])
@@ -99,17 +122,17 @@ def refresh():
     mainWindow["correct4"].update(info["correct4"])
     mainWindow["correct5"].update(info["correct5"])
 
-    mainWindow["previous1"].update(info["previous1"])
-    mainWindow["previous2"].update(info["previous2"])
-    mainWindow["previous3"].update(info["previous3"])
+    mainWindow["wrong1"].update(info["wrong1"])
+    mainWindow["wrong2"].update(info["wrong2"])
+    mainWindow["wrong3"].update(info["wrong3"])
 
 def answerWindow():
 
     timeStart = time.time()
-    timeLeft = 10 #info["timeLeft"]
+    timeLeft = 15
     currTime = timeLeft
     layouts["answerLayout"] = [[sg.Text(info["question"], key="question")],
-                               [sg.Text("Time left:"), sg.Text(info["timeLeft"], key="timeLeft")],
+                               [sg.Text("Time left:"), sg.Text(timeLeft, key="timeLeft")],
                                [sg.Text("Answer:"), sg.InputText(key="answer")],
                                [sg.Button('Ok')]]
 
@@ -129,7 +152,7 @@ def answerWindow():
 
 def giveAnswer(answer, timeleft):
     f = open("answer.txt", "w")
-    f.write(answer + "\n" + timeleft)
+    f.write(str(answer) + "\n" + str(timeleft))
     f.close()
 
 
@@ -151,7 +174,6 @@ def gameOver(winner: bool):
 
 def main():
     global mainWindow
-    nickname = ""
 
     loginWindow = sg.Window("Login", layouts["getNicknameLayout"], finalize=True)
     loginWindow["inputNickname"].bind("<Return>", "_Enter")
@@ -165,17 +187,18 @@ def main():
             break
 
     loginWindow.close()
-    createLayouts(nickname)
+    createLayouts()
     mainWindow = sg.Window('Familiada', layouts["mainLayout"], finalize=True)
 
     while True:
-        event, values = mainWindow.read()
+        reload()
+        refresh()
+        event, values = mainWindow.read(timeout=1000)
         if event in (sg.WIN_CLOSED, 'Exit'):
             break
-        info["name1"] = "asdasdad"
-        refresh()
-        answerWindow()
-        gameOver(True)
+        if event == "Ok":
+            answerWindow()
+            gameOver(True)
 
     mainWindow.close()
 
