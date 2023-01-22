@@ -40,7 +40,7 @@ int main() {
   struct sockaddr_in serv_addr;
   serv_addr.sin_family = AF_INET;
   serv_addr.sin_port = htons(3333);
-  serv_addr.sin_addr.s_addr = INADDR_ANY;
+  serv_addr.sin_addr.s_addr = inet_addr("127.0.0.1");
 
   // Bind the socket to the address
   if (bind(sockfd, (struct sockaddr*) &serv_addr, sizeof(serv_addr)) < 0) {
@@ -78,33 +78,41 @@ int main() {
     clients.push_back(new_client);
 
     // Print a message to the console
-    std::cout << nickname << " with id " << clients.size() - 1 <<
+   
     std::cout << nickname << " with id " << clients.size() - 1 << " just connected" << std::endl;
 
     // If there are now 6 clients, start the loop
-    if (clients.size() == 4) {
-      for (int i = 0; i < 6; i++) {
-        // Read the answer from the client
-        std::string answer = take_answer(i);
-        offstream answer_file;
-        answer_file.open("answer.txt");
-        answer_file << answer << std::endl;
-        answer_file.close();
-        
-        // Send the data from the file "ramka.txt" to all clients
+    if (clients.size() == 2) {
+      for (int i = 0; i < 2; i++) {
+      
+      	  // Send the data from the file "ramka.txt" to all clients
         std::ifstream infile("ramka.txt");
         std::string line;
-        while (std::getline(infile, line)) {
+        std::string message;
+        while (std::getline(infile, line)) 
+        	message+=line;
           for (int j = 0; j < clients.size(); j++) {
-            if (send(clients[j].sockfd, line.c_str(), line.size(), 0) < 0) {
+            if (send(clients[j].sockfd, message.c_str(), message.size(), 0) < 0) {
               std::cerr << "Error sending message to client" << std::endl;
             }
           }
+          infile.close();
+        
+        
+      
+      
+        // Read the answer from the client
+        std::cout << "s1" << std::endl;
+        std::string answer = take_answer(i);
+        std::cout << "s2" << std::endl;
+        std::ofstream answer_file;
+        answer_file.open("answertmp.txt");
+        answer_file << answer << std::endl;
+        answer_file.close();
         }
-        infile.close();
       }
     }
-  }
+  
 
   return 0;
 }

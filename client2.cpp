@@ -45,6 +45,7 @@ int main() {
     std::ifstream infile("answer.txt");
     std::string message;
     std::getline(infile, message);
+    std::cout<< message << std::endl;
     infile.close();
 
     // Send the message to the server
@@ -55,7 +56,9 @@ int main() {
 
     // Wait for a response from the server
     char buffer[1024];
-    int num_bytes = recv(sockfd, buffer, 1024, 0);
+    std::cout << "s1" << std::endl;
+    int num_bytes = recv(sockfd, buffer, 1024, MSG_WAITALL);
+    std::cout << "s2" << std::endl;
     if (num_bytes < 0) {
       std::cerr << "Error receiving message from server" << std::endl;
       return 1;
