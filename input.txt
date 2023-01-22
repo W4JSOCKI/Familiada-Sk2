@@ -11,7 +11,6 @@ Punkty team 2
 Błędy team 1
 Błędy team 2
 Gracz proszony o odpowiedź
-Liczba odpowiedzi
 Pytanie
 Odp1 Punkty
 Odp2 Punkty
@@ -21,6 +20,11 @@ Odp5 Punkty
 zła odp 1
 zła odp 2
 zła odp 3
+zła odp 4
+zła odp 5
+zła odp 6
+zła odp 7
+
 
 Czy ostatnia odpowiedź była poprawna nie jest do końca potrzebne bo będzie to widać po punktach i błędach, ale może ci tak być wygodniej,
 daj znać to zaimplementuję to albo nie

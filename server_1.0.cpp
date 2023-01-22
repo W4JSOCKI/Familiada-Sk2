@@ -11,12 +11,12 @@
 #include <sstream>
 #include <cstdlib>
 #include <unistd.h>
-#include <sys/socket.h>
-#include <netinet/in.h>
-#include <arpa/inet.h>
+//#include <sys/socket.h>
+//#include <netinet/in.h>
+//#include <arpa/inet.h>
 #include <errno.h>
-#include <netdb.h>
-#include <sys/epoll.h>
+//#include <netdb.h>
+//#include <sys/epoll.h>
 #include <unordered_set>
 #include <signal.h>
 #include <error.h>
@@ -24,7 +24,7 @@
 
 using namespace std;
 
-class Client;
+/*class Client;
 
 int servFd;
 int epollFd;
@@ -166,8 +166,14 @@ void sendToAllBut(int fd, char * buffer, int count){
             client->write(buffer, count);
     }
 }
+*/
 
-
+string getanswer(int p_nr)// temp function
+{
+    string ans;
+    getline(cin,ans);
+    return ans;
+}
 
 class Player{
     int id;
@@ -197,12 +203,12 @@ class Game {
     int id;
     short how_many_players;
     vector <Player> players;//0-2 team1 3-5 team 2
-
+    
     short round;// actual round number 0 if game not started
     string nicknames[6];
-    string question;
+    /*string question;
     string responses[5];
-    short points[5];// points per response
+    short points[5];// points per response DEPRECATED*/
     
     short temp_points;
     short team1points,team2points;
@@ -210,7 +216,11 @@ class Game {
     short buttonwin;// who won clash at the button 0-during clash 1-team1 2-team2
     short point_multiplier;// first 3 rounds = 1 then goes one up every round;
     short point_treshhold =300; // points needed to win the game
+    int responding;
     short used_questions [15];
+    string answers_to_send [6];
+    string wronganwers[7];
+    int wronganwers_counter=0;
     
   public:  Game(int newid){
         id=newid;
@@ -230,6 +240,7 @@ class Game {
     string questions [1001];
     string answers [1001][6];
     int pointvalue [1001][6];// points for each answer
+    string pointstring[1001][6];
    
     void loaddata(){ // not sure if it should be in Game class, loads questions answers and points from file to arrays
         
@@ -250,9 +261,57 @@ class Game {
             string p;
             getline(linestream,p,';');
            pointvalue[i][j]=stoi(p);
+           pointstring[i][j]=p;
         }
        }
       baza.close();
+
+    }
+    void senddata(int id)
+    {
+        ofstream file;
+        file.open("C:/Programowanie/Familiada-Sk2/out.txt");
+        file << id << endl;
+        for(int i=0; i<6;i++)      
+        file << nicknames[i] << endl;
+        
+        file<<round << endl;
+        file << team1points << endl;
+        file << team2points << endl;
+        file << team1fails << endl;
+        file << team2fails << endl;
+        file << responding << endl;
+        for(int i=0;i<6; i++)
+        file << answers_to_send[i] << endl;
+        
+        for(int i=0;i<7; i++)
+        file << wronganwers[i] << endl;
+        file.close();
+        
+
+
+    }
+
+    void resetanswerstosend(int q_nr)
+    {
+        temp_points=0;
+        wronganwers_counter=0;
+         //reset answers
+        answers_to_send[0]=questions[q_nr];
+        answers_to_send[1]="1. -----";
+        answers_to_send[2]="2. -----";
+        answers_to_send[3]="3. -----";
+        answers_to_send[4]="4. -----";
+        answers_to_send[5]="5. -----";
+
+        wronganwers[0]="-----";
+        wronganwers[1]="-----";
+        wronganwers[2]="-----";
+        wronganwers[3]="-----";
+        wronganwers[4]="-----";
+        wronganwers[5]="-----";
+        wronganwers[6]="-----";
+        wronganwers[7]="-----";
 
     }
     
@@ -273,7 +332,9 @@ class Game {
     public: int addplayer(Player NewPlayer){
         if(how_many_players < 6){
         players.push_back(NewPlayer);
+        nicknames[how_many_players]=NewPlayer.getnickname();
         how_many_players++;
+        
         return how_many_players;}  
         else
             return -1;
@@ -290,61 +351,134 @@ class Game {
         return -1;
     }
 
-    int check_answer(string given_answer){// return response number if correct and -1 if incorrect
+    int check_answer(int q_nr, string given_answer){// return response number if correct and -1 if incorrect
 
-        for(int i=0; i<5;i++){
-            if(given_answer==responses[i]){
-                temp_points+=points[i];
+        for(int i=1; i<6;i++){
+            if(given_answer==answers[q_nr][i]){
+                temp_points+=pointvalue[q_nr][i];
                 return i;
             }
         }
 
+        wronganwers[wronganwers_counter]=given_answer;
+        wronganwers_counter++;
+
         return -1;
     }
 
-    int button_phase(){// first phase of the game
+    
+    int reveal_answer(int q_nr, int a_nr)
+    {
+        if(a_nr==-1)
+        return -1;
 
+        char a_c=a_nr+48;
+        string x="";
+        x+=a_c;
+        answers_to_send[a_nr]=x+". "+ answers[q_nr][a_nr] + " " + pointstring[q_nr][a_nr];
+        return a_nr;
+    }
+
+
+    int button_phase(int q_nr){// first phase of the game
+
+        cout << questions[q_nr] << endl;
+        cout << q_nr << endl;
+        resetanswerstosend(q_nr);
         int clash_player_1= (round-1)%3;
         int clash_player_2= (round-1)%3+3;
         buttonwin=1+rand()%2;// TODO (which player press button first)
 
+        for(int i=0; i<3; i++){
+            responding=clash_player_1;
+            senddata(1);
+            responding=clash_player_2;
+            senddata(1);
+            string a1=getanswer(clash_player_1);
+            string a2=getanswer(clash_player_2);
+            if(a1!=a2)
+            {
+                int res1=reveal_answer(q_nr,check_answer(q_nr,a1));
+                int res2=reveal_answer(q_nr,check_answer(q_nr,a2));
+                if(res1==-1 && res2==-1)
+                {
+                    clash_player_1=(clash_player_1+1)%3;
+                    clash_player_2=clash_player_1+3;
+                }else if(res1!=-1 && res1<res2)
+                return 1;
+                else if(res2!=-1)
+                return 2;
+                else return 1;
     
+            }
+            else if(reveal_answer(q_nr,check_answer(q_nr,a1))!=-1)
+            return 1;
+
+            responding=clash_player_1;
+            senddata(1);
+            responding=clash_player_2;
+            senddata(1);
+        }
+        return -1;
+     
     }
     
     
     
+    
     int play(){
-        if(how_many_players==6){
+        if(how_many_players!=6){
             cout << "There is " << how_many_players << " players, we need 6 to start" << endl;
             return -1;
         }
+        int q_nr=chose_question();
+        round=1;
+        button_phase(q_nr);
+        senddata(1);
+        cout << "end" << endl;
+        return 0;
+        
+
         
     }
                                                      
 };
 
 
-/*int main()
+int main()
 {   srand( time( NULL ) );
     Game test(1);
     Player player1(1);
     Player player2(2);
+    Player player3(3);
+    Player player4(4);
+    Player player5(5);
+    Player player6(6);
     player1.setnickname("Hutnor");
     player2.setnickname("szbanek");
+    player3.setnickname("Irssus");
+    player4.setnickname("Pandzica");
+    player5.setnickname("Voyager");
+    player6.setnickname("Makary");
     cout << test.addplayer(player1) << endl;
     cout << test.addplayer(player2) << endl;
+    test.addplayer(player3);
+    test.addplayer(player4);
+    test.addplayer(player5);
+    test.addplayer(player6);
     test.loaddata();
+    test.play();
 
    
 
    
-    for(int i=1; i<50; i++)
-    {
-        cout << test.questions[i] << endl;
-        for(int j=1; j<6; j++)
-       cout << test.answers[i][j] << " " <<  test.pointvalue[i][j] << endl;
-    }//checking if database loads correctly
+    // for(int i=1; i<50; i++)
+    // {
+    //     cout << test.questions[i] << endl;
+    //     for(int j=1; j<6; j++)
+    //    cout << test.answers[i][j] << " " <<  test.pointvalue[i][j] << endl;
+    // }//checking if database loads correctly
     return 0;
-}*/
+}
 
 
