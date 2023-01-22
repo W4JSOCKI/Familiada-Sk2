@@ -82,11 +82,15 @@ int main() {
     std::cout << nickname << " with id " << clients.size() - 1 << " just connected" << std::endl;
 
     // If there are now 6 clients, start the loop
-    if (clients.size() == 6) {
+    if (clients.size() == 4) {
       for (int i = 0; i < 6; i++) {
         // Read the answer from the client
         std::string answer = take_answer(i);
-
+        offstream answer_file;
+        answer_file.open("answer.txt");
+        answer_file << answer << std::endl;
+        answer_file.close();
+        
         // Send the data from the file "ramka.txt" to all clients
         std::ifstream infile("ramka.txt");
         std::string line;
