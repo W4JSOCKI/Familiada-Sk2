@@ -29,6 +29,28 @@ void save_to_file(int client_fd) {
     file.close();
 }
 
+void send_file_to_clients(std::vector<int> &clients, std::string file_name) {
+    std::ifstream file;
+    file.open(file_name, std::ios::binary);
+    if (!file.is_open()) {
+        std::cerr << "Failed to open file" << std::endl;
+        return;
+    }
+    file.seekg(0, file.end);
+    int file_size = file.tellg();
+    file.seekg(0, file.beg);
+    char *file_buffer = new char[file_size];
+    file.read(file_buffer, file_size);
+    for (int client_fd : clients) {
+        int sent_bytes = 0;
+        while (sent_bytes < file_size) {
+            sent_bytes += send(client_fd, file_buffer + sent_bytes, file_size - sent_bytes, 0);
+        }
+    }
+    file.close();
+    delete[] file_buffer;
+}
+
 
 int main()
 {
@@ -140,6 +162,7 @@ int main()
                     return 1;
                 }
                 save_to_file(events[i].data.fd);
+                send_file_to_clients(clients,"ramka.txt");
                 if (done)
                 {
                     std::cout << "Closing connection with client " << client_index + 1 << std::endl;
