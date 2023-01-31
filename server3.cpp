@@ -6,6 +6,7 @@
 #include <unistd.h>
 #include <fstream>
 
+
 const int MAX_CLIENTS = 2;
 const int PORT = 3333;
 const int MAX_EVENTS = MAX_CLIENTS + 1;
@@ -43,8 +44,11 @@ cout << "weszł" << endl;
     file.seekg(0, file.beg);
     char *file_buffer = new char[file_size];
     file.read(file_buffer, file_size);
+    int i=0;
     for (int client_fd : clients) {
         int sent_bytes = 0;
+        std::string file_buffer_id= std::to_string(i)+"/n"+file_buffer;
+        file_size=file_buffer_id.size();
         while (sent_bytes < file_size) {
             sent_bytes += send(client_fd, file_buffer, file_size, 0);
             cout << file_buffer << endl;
@@ -64,6 +68,7 @@ int main()
     int opt = 1;
     int addrlen = sizeof(address);
     std::vector<int> clients;
+    std::vector<int> clientids;
     struct epoll_event event;
     struct epoll_event *events;
 
@@ -135,6 +140,7 @@ int main()
                 while (clients.size() < MAX_CLIENTS && (client_fd = accept(server_fd, (struct sockaddr *)&address, (socklen_t *)&addrlen)) >= 0)
                 {
                     std::cout << "Assigned unique ID " << clients.size() + 1 << " to new client" << std::endl;
+                    clientids.push_back(clients.size() + 1);
                     clients.push_back(client_fd);
                     event.data.fd = client_fd;
                     event.events = EPOLLIN | EPOLLET;
@@ -169,9 +175,9 @@ int main()
                     std::cerr << "Error finding client index" << std::endl;
                     return 1;
                 }
-                cout << "wtc" << endl;
+                
                 save_to_file(events[i].data.fd);
-                cout << "dwiewierze" << endl;
+    
                 send_file_to_clients(clients,"ramka.txt");
                 if (done)
                 {

@@ -215,7 +215,7 @@ class Game {
     short team1fails,team2fails;
     short buttonwin;// who won clash at the button 0-during clash 1-team1 2-team2
     short point_multiplier;// first 3 rounds = 1 then goes one up every round;
-    short point_treshhold =300; // points needed to win the game
+    short point_treshhold =100; // points needed to win the game
     int responding;
     short used_questions [15];
     string answers_to_send [6];
@@ -223,11 +223,15 @@ class Game {
     int wronganwers_counter=0;
     int correctanswers[6];
     
-  public:  Game(int newid){
+  public:  Game(int newid,string nick1,string nick2,string nick3,string nick4,string nick5,string nick6){
         id=newid;
         how_many_players=0;
-        for(int i=0; i<6;i++)
-            nicknames[i]="0";
+        nicknames[0]=nick1;
+        nicknames[1]=nick2;
+        nicknames[2]=nick3;
+        nicknames[3]=nick4;
+        nicknames[4]=nick5;
+        nicknames[5]=nick6;
         round=0;
         point_multiplier=1;
         team1points=0;
@@ -249,7 +253,7 @@ class Game {
         
        string line;
        ifstream baza;
-       baza.open("C:/Programowanie/Familiada-Sk2/Baza.csv");
+       baza.open("Baza.csv");
     
        
        for(int i=1; i<1001; i++){
@@ -268,11 +272,11 @@ class Game {
       baza.close();
 
     }
-    void senddata(int id)
+    void senddata()
     {
         ofstream file;
-        file.open("C:/Programowanie/Familiada-Sk2/out.txt");
-        file << id << endl;
+        file.open("out.txt");
+        
         for(int i=0; i<6;i++)      
         file << nicknames[i] << endl;
         
@@ -405,9 +409,9 @@ class Game {
 
         for(int i=0; i<3; i++){
             responding=clash_player_1;
-            senddata(1);
+            senddata();
             responding=clash_player_2;
-            senddata(1);
+            senddata();
             string a1=getanswer(clash_player_1);
             string a2=getanswer(clash_player_2);
             if(a1!=a2)
@@ -429,9 +433,9 @@ class Game {
             return 1;
 
             responding=clash_player_1;
-            senddata(1);
+            senddata();
             responding=clash_player_2;
-            senddata(1);
+            senddata();
         }
         return -1;
      
@@ -441,10 +445,10 @@ class Game {
     
     
     int play(){
-        if(how_many_players!=6){
-            cout << "There is " << how_many_players << " players, we need 6 to start" << endl;
-            return -1;
-        }
+        // if(how_many_players!=6){
+        //     cout << "There is " << how_many_players << " players, we need 6 to start" << endl;
+        //     return -1;
+        // }
         round=1;
         while(team1points<point_treshhold && team2points<point_treshhold){
         int q_nr=chose_question();
@@ -453,7 +457,7 @@ class Game {
         if(button_phase(q_nr)==1){
             int responding=0;
             while(team1fails<3){
-                senddata(1);
+                senddata();
                 string a1=getanswer(responding);
                 if(reveal_answer(q_nr,check_answer(q_nr,a1))==-1)
                 team1fails++;
@@ -483,13 +487,13 @@ class Game {
                     }
     
                 }
-                senddata(1);
+                senddata();
                 }
         
         else{
             int responding=3;
             while(team2fails<3){
-                senddata(1);
+                senddata();
                 string a1=getanswer(responding);
                 if(reveal_answer(q_nr,check_answer(q_nr,a1))==-1)
                 team2fails++;
@@ -505,7 +509,7 @@ class Game {
                             break;
                         }
                     }
-                    senddata(1);
+                    senddata();
                 }
                 if(team2fails==3){
                     string a1=getanswer(1);
@@ -518,11 +522,15 @@ class Game {
                         temp_points=0;
                     }
     
-                } senddata(1);
+                } senddata();
                 }
         round++;
         }
-         cout << "end" << endl;
+         
+         if(team1points>team2points)
+          cout<< "Team 1 wins" << endl;
+            else
+            cout<< "Team 2 wins" << endl;
          return 0;
         }
         
@@ -537,25 +545,25 @@ class Game {
 
 int main()
 {   srand( time( NULL ) );
-    Game test(1);
-    Player player1(1);
-    Player player2(2);
-    Player player3(3);
-    Player player4(4);
-    Player player5(5);
-    Player player6(6);
-    player1.setnickname("Hutnor");
-    player2.setnickname("szbanek");
-    player3.setnickname("Irssus");
-    player4.setnickname("Pandzica");
-    player5.setnickname("Voyager");
-    player6.setnickname("Makary");
-    cout << test.addplayer(player1) << endl;
-    cout << test.addplayer(player2) << endl;
-    test.addplayer(player3);
-    test.addplayer(player4);
-    test.addplayer(player5);
-    test.addplayer(player6);
+    Game test(1,"Hutnor","szbanek","Irssus","Pandzica","Voyager","Makary");
+    // Player player1(1);
+    // Player player2(2);
+    // Player player3(3);
+    // Player player4(4);
+    // Player player5(5);
+    // Player player6(6);
+    // player1.setnickname("Hutnor");
+    // player2.setnickname("szbanek");
+    // player3.setnickname("Irssus");
+    // player4.setnickname("Pandzica");
+    // player5.setnickname("Voyager");
+    // player6.setnickname("Makary");
+    // cout << test.addplayer(player1) << endl;
+    // cout << test.addplayer(player2) << endl;
+    // test.addplayer(player3);
+    // test.addplayer(player4);
+    // test.addplayer(player5);
+    // test.addplayer(player6);
     test.loaddata();
     test.play();
 
