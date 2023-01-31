@@ -1,11 +1,10 @@
-Here is an example of a C++ client that connects to a server, receives a file, and writes it to "in.txt":
-
-Copy code
 #include <iostream>
 #include <fstream>
 #include <sys/socket.h>
 #include <arpa/inet.h>
 
+using namespace std;
+int PORT = 3333;
 void send_file_to_server(int sock) {
     std::ifstream file;
     file.open("answer.txt", std::ios::binary);
@@ -32,7 +31,7 @@ int main() {
         std::cerr << "Failed to create socket" << std::endl;
         return 1;
     }
-
+	
     struct sockaddr_in server_address;
     server_address.sin_family = AF_INET;
     server_address.sin_port = htons(PORT);
@@ -45,19 +44,30 @@ int main() {
         std::cerr << "Connection failed" << std::endl;
         return 1;
     }
+    while(1){
+    send_file_to_server(sock);
     std::ofstream file;
+    char buffer[1024] = {0};
+    int valread;
+    if((valread = recv(sock, buffer, sizeof(buffer), 0)) > 0){
     file.open("in.txt", std::ios::binary | std::ios::out | std::ios::trunc);
     if (!file.is_open()) {
         std::cerr << "Failed to open file" << std::endl;
         return 1;
+     
     }
-    char buffer[1024] = {0};
-    int valread;
-    while ((valread = recv(sock, buffer, sizeof(buffer), 0)) > 0) {
+    cout << buffer << endl;
+    file.write(buffer, valread);
+    }
+    
+    
+   /* while ((valread = recv(sock, buffer, sizeof(buffer), 0)) > 0) {
         file.write(buffer, valread);
-    }
+         cout << buffer << endl;
+    }*/
     file.close();
-    send_file_to_server(sock);
-    close(sock);
+    }	
+    
+    
     return 0;
 }
