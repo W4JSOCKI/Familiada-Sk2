@@ -221,6 +221,7 @@ class Game {
     string answers_to_send [6];
     string wronganwers[7];
     int wronganwers_counter=0;
+    int correctanswers[6];
     
   public:  Game(int newid){
         id=newid;
@@ -303,7 +304,15 @@ class Game {
         answers_to_send[3]="3. -----";
         answers_to_send[4]="4. -----";
         answers_to_send[5]="5. -----";
+        //reset correct answers
+        correctanswers[0]=0;
+        correctanswers[1]=0; 
+        correctanswers[2]=0;
+        correctanswers[3]=0;
+        correctanswers[4]=0;
+        correctanswers[5]=0;
 
+        //reset wrong answers
         wronganwers[0]="-----";
         wronganwers[1]="-----";
         wronganwers[2]="-----";
@@ -354,15 +363,20 @@ class Game {
     int check_answer(int q_nr, string given_answer){// return response number if correct and -1 if incorrect
 
         for(int i=1; i<6;i++){
-            if(given_answer==answers[q_nr][i]){
+            if(given_answer==answers[q_nr][i] && correctanswers[i]==0){
                 temp_points+=pointvalue[q_nr][i];
+                correctanswers[i]=1;
                 return i;
             }
         }
-
-        wronganwers[wronganwers_counter]=given_answer;
-        wronganwers_counter++;
-
+        for(int i=0; i<7;i++){
+            if(wronganwers[i]=="-----"){
+                wronganwers[i]=given_answer;
+                wronganwers_counter++;
+                return -1;
+            }
+        }
+    
         return -1;
     }
 
@@ -431,18 +445,94 @@ class Game {
             cout << "There is " << how_many_players << " players, we need 6 to start" << endl;
             return -1;
         }
-        int q_nr=chose_question();
         round=1;
-        button_phase(q_nr);
-        senddata(1);
-        cout << "end" << endl;
-        return 0;
+        while(team1points<point_treshhold && team2points<point_treshhold){
+        int q_nr=chose_question();
+        
+
+        if(button_phase(q_nr)==1){
+            int responding=0;
+            while(team1fails<3){
+                senddata(1);
+                string a1=getanswer(responding);
+                if(reveal_answer(q_nr,check_answer(q_nr,a1))==-1)
+                team1fails++;
+                else{
+                    int j=0;
+                for(int i=1; i<6; i++){
+                    if(correctanswers[i]==1){
+                     j++;
+                    }}
+                    if(j==5){
+                        team1points+=temp_points;
+                        temp_points=0;
+                        break;
+                    }
+                }
+              
+                }
+                if(team1fails==3){
+                    string a1=getanswer(4);
+                    if(reveal_answer(q_nr,check_answer(q_nr,a1))!=-1){
+                        team2points+=temp_points;
+                        temp_points=0;
+                    }
+                    else{
+                        team1points+=temp_points;
+                        temp_points=0;
+                    }
+    
+                }
+                senddata(1);
+                }
+        
+        else{
+            int responding=3;
+            while(team2fails<3){
+                senddata(1);
+                string a1=getanswer(responding);
+                if(reveal_answer(q_nr,check_answer(q_nr,a1))==-1)
+                team2fails++;
+                else{
+                    int j=0;
+                    for(int i=1; i<6; i++){
+                        if(correctanswers[i]==1){
+                        j++;
+                        }}
+                        if(j==5){
+                            team2points+=temp_points;
+                            temp_points=0;
+                            break;
+                        }
+                    }
+                    senddata(1);
+                }
+                if(team2fails==3){
+                    string a1=getanswer(1);
+                    if(reveal_answer(q_nr,check_answer(q_nr,a1))!=-1){
+                        team1points+=temp_points;
+                        temp_points=0;
+                    }
+                    else{
+                        team2points+=temp_points;
+                        temp_points=0;
+                    }
+    
+                } senddata(1);
+                }
+        round++;
+        }
+         cout << "end" << endl;
+         return 0;
+        }
+        
+       
+        };
+        
         
 
         
-    }
-                                                     
-};
+ 
 
 
 int main()

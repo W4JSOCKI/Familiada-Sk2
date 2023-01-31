@@ -1,5 +1,7 @@
 import PySimpleGUI as sg
 import time
+import subprocess
+import os
 
 info = {
     "playerID": -1,
@@ -160,6 +162,7 @@ def sendNickname(nickname):
     f = open("name.txt", "w")
     f.write(nickname)
     f.close()
+    subprocess.run([os.getcwd() + "/client2.exe"])
 
 def gameOver(winner: bool):
     layouts["gameOver"] = [[sg.Text("You won!" if winner else "You lost!")],
