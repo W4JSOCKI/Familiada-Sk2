@@ -17,7 +17,6 @@ info = {
     "t1Errors": 0,
     "t2Errors": 0,
     "answering": -1,
-    "answersCount": -1,
     "question": "que",
     "correct1": "cor1",
     "correct2": "cor2",
@@ -26,7 +25,11 @@ info = {
     "correct5": "cor5",
     "wrong1": "prev1",
     "wrong2": "prev2",
-    "wrong3": "prev3"
+    "wrong3": "prev3",
+    "wrong4": "prev4",
+    "wrong5": "prev5",
+    "wrong6": "prev6",
+    "wrong7": "prev7"
 }
 
 layouts = {
@@ -54,18 +57,22 @@ def createLayouts():
                                   [sg.Text(info["correct2"], key="correct2")],
                                   [sg.Text(info["correct3"], key="correct3")],
                                   [sg.Text(info["correct4"], key="correct4")],
-                                  [sg.Text(info["correct5"], key="correct5")],]
+                                  [sg.Text(info["correct5"], key="correct5")]]
     
     layouts["wrongAnswersLayout"] = [[sg.Text(info["wrong1"], key="wrong1")],
                                   [sg.Text(info["wrong2"], key="wrong2")],
-                                  [sg.Text(info["wrong3"], key="wrong3")],]
+                                  [sg.Text(info["wrong3"], key="wrong3")],
+                                  [sg.Text(info["wrong4"], key="wrong4")],
+                                  [sg.Text(info["wrong5"], key="wrong5")],
+                                  [sg.Text(info["wrong6"], key="wrong6")],
+                                  [sg.Text(info["wrong7"], key="wrong7")]]
 
     layouts["mainLayout"] = [[sg.Frame("Blue team", layouts["blueTeamLayout"], expand_x=True, key="blueTeamLayout")],
                              [sg.Frame("Questions", layouts["questionsLayout"], expand_x=True, key="questionsLayout")],
                              [sg.Frame("Red team", layouts["redTeamLayout"], expand_x=True, key="redTeamLayout")],
                              [sg.Frame("wrong answers", layouts["wrongAnswersLayout"], expand_x=True, key="wrongAnswersLayout")],
                              [sg.Text("                                                                                                  ")],
-                             [sg.Button('Ok'), sg.Button('Exit')]]
+                             [sg.Button('Exit')]]
 
 
 def getPlayerColor(id):
@@ -90,7 +97,7 @@ def reload():
     lines = f.read().split("\n")
     i=0
     for x in info.keys():
-        if x in ("playerID", "roundNumber", "t1Points", "t2Points", "t1Errors", "t2Errors", "answering", "answersCount"):
+        if x in ("playerID", "roundNumber", "t1Points", "t2Points", "t1Errors", "t2Errors", "answering"):
             info[x] = int(lines[i])
         else:
             info[x] = lines[i]
@@ -127,6 +134,10 @@ def refresh():
     mainWindow["wrong1"].update(info["wrong1"])
     mainWindow["wrong2"].update(info["wrong2"])
     mainWindow["wrong3"].update(info["wrong3"])
+    mainWindow["wrong4"].update(info["wrong4"])
+    mainWindow["wrong5"].update(info["wrong5"])
+    mainWindow["wrong6"].update(info["wrong6"])
+    mainWindow["wrong7"].update(info["wrong7"])
 
 def answerWindow():
 
@@ -159,10 +170,10 @@ def giveAnswer(answer, timeleft):
 
 
 def sendNickname(nickname):
-    f = open("name.txt", "w")
+    f = open("nickname.txt", "w")
     f.write(nickname)
     f.close()
-    subprocess.run([os.getcwd() + "/client2.exe"])
+    # subprocess.Popen([os.getcwd() + "/client.exe"])
 
 def gameOver(winner: bool):
     layouts["gameOver"] = [[sg.Text("You won!" if winner else "You lost!")],
@@ -193,15 +204,20 @@ def main():
     createLayouts()
     mainWindow = sg.Window('Familiada', layouts["mainLayout"], finalize=True)
 
+    reload()
+    refresh()
+
     while True:
-        reload()
-        refresh()
-        event, values = mainWindow.read(timeout=1000)
+        
+        event, values = mainWindow.read(timeout=500)
         if event in (sg.WIN_CLOSED, 'Exit'):
             break
-        if event == "Ok":
+
+        reload()
+        refresh()
+
+        if info["playerID"] == info["answering"]:
             answerWindow()
-            gameOver(True)
 
     mainWindow.close()
 
