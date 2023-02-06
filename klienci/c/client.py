@@ -148,7 +148,7 @@ def refresh():
 def answerWindow():
 
     timeStart = time.time()
-    timeLeft = 120
+    timeLeft = 15
     currTime = timeLeft
     layouts["answerLayout"] = [[sg.Text(info["question"], key="question")],
                                [sg.Text("Time left:"), sg.Text(timeLeft, key="timeLeft")],
@@ -176,11 +176,10 @@ def giveAnswer(answer, timeleft):
 
 
 def sendNickname(nickname):
-    global cpp_client
     f = open("nickname.txt", "w")
     f.write(nickname)
     f.close()
-    cpp_client = subprocess.Popen([os.getcwd() + "/client3.exe"])
+    subprocess.Popen([os.getcwd() + "/client3.exe"])
 
 def gameOver(blueWon: bool):
     if (info["playerID"] in (1,2,3) and blueWon) or (info["playerID"] in (4,5,6) and not blueWon):
@@ -236,7 +235,6 @@ def main():
         if info["answering"] == -2:
             gameOver(False)
 
-    cpp_client.kill()
     mainWindow.close()
 
 

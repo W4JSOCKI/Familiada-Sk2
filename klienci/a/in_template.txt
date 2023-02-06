@@ -1,16 +1,17 @@
-a
-b
-c
-e
-f
-d
-1
+-1
+-----
+-----
+-----
+-----
+-----
+-----
 0
 0
 0
 0
-3
-What Might A Hitchhiker Take With Him, In Order To Seem Less Dangerous?
+0
+0
+-----
 1. -----
 2. -----
 3. -----
