@@ -74,6 +74,7 @@ int main()
         std::cerr << "Connection failed" << std::endl;
         return 1;
     }
+
     send_file_to_server(sock, "nickname.txt");
     string answer;
     ifstream filein("in.txt");
@@ -114,6 +115,7 @@ int main()
             file.write(buffer, valread);
         }
         file.close();
+
     }
 
     return 0;

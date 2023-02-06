@@ -5,6 +5,8 @@
 #include <netinet/in.h>
 #include <unistd.h>
 #include <fstream>
+#include <algorithm>
+#include <string>
 
 
 const int MAX_CLIENTS = 6;
@@ -12,6 +14,7 @@ const int PORT = 3333;
 const int MAX_EVENTS = MAX_CLIENTS + 1;
 const std::string FILENAME = "answertmp.txt";
 using namespace std;
+int in;
 
 void save_to_file(int client_fd) {
     std::ofstream file;
@@ -69,6 +72,7 @@ int main()
     int addrlen = sizeof(address);
     std::vector<int> clients;
     std::vector<int> clientids;
+    std::vector<string>nicknames;
     struct epoll_event event;
     struct epoll_event *events;
 
@@ -142,6 +146,9 @@ int main()
                     std::cout << "Assigned unique ID " << clients.size() + 1 << " to new client" << std::endl;
                     clientids.push_back(clients.size() + 1);
                     clients.push_back(client_fd);
+                    char buffer[1024] = {0};
+    		    int valread = read(client_fd, buffer, 1024);
+    		    nicknames.push_back(buffer);
                     event.data.fd = client_fd;
                     event.events = EPOLLIN | EPOLLET;
                     if (epoll_ctl(epoll_fd, EPOLL_CTL_ADD, client_fd, &event) < 0)

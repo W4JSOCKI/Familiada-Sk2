@@ -1,26 +1,25 @@
+a
+b
+c
+d
+e
+f
 1
-Hutnor
-szbanek
-Irssus
-Pandzica
-Voyager
-Makary
-1
 0
 0
 0
 0
-5
-Name Something That Might Be Carved Into A Christmas Ice Sculpture.
+3
+Name A Salad That’s Not Green.
 1. -----
-2. Tree 24
+2. Potato Salad 33
 3. -----
-4. -----
-5. -----
-Santa Claus
-Reindeer
-Igloo
-Christmass tree
-Penguins
+4. Taco Salad 5
+5. Egg Salad 4
+Pasta Salad
+-----
+-----
+-----
+-----
 -----
 -----

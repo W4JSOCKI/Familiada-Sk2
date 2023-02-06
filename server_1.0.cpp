@@ -11,12 +11,12 @@
 #include <sstream>
 #include <cstdlib>
 #include <unistd.h>
-//#include <sys/socket.h>
-//#include <netinet/in.h>
-//#include <arpa/inet.h>
+#include <sys/socket.h>
+#include <netinet/in.h>
+#include <arpa/inet.h>
 #include <errno.h>
-//#include <netdb.h>
-//#include <sys/epoll.h>
+#include <netdb.h>
+#include <sys/epoll.h>
 #include <unordered_set>
 #include <signal.h>
 #include <error.h>
@@ -315,7 +315,7 @@ class Game {
         correctanswers[3]=0;
         correctanswers[4]=0;
         correctanswers[5]=0;
-        correctanswers[6]=0;
+        
 
         //reset wrong answers
         wronganwers[0]="-----";
@@ -377,6 +377,10 @@ class Game {
                 correctanswers[i]=1;
                 return i;
             }
+            else{
+            cout << given_answer << " " << answers[q_nr][i] << " " << i << " " << correctanswers[i] << endl;
+            }
+            
         }
         for(int i=0; i<7;i++){
             if(wronganwers[i]=="-----"){
@@ -460,35 +464,45 @@ class Game {
         
 
         if(button_phase(q_nr)==1){
+        cout << "team 1 takes after button" << endl;
             int responding=0;
             while(team1fails<3){
                 senddata();
-                string a1=getanswer(responding);
+                string a1=getanswer(responding);// TODO change responding
                 if(reveal_answer(q_nr,check_answer(q_nr,a1))==-1)
                 team1fails++;
                 else{
+                cout << "correct anser for team 1: " << a1 << "team 1 fails: " << team1fails << endl;
                     int j=0;
                 for(int i=1; i<6; i++){
                     if(correctanswers[i]==1){
                      j++;
                     }}
                     if(j==5){
+                    cout << "team 1 gets " << temp_points << endl;
                         team1points+=temp_points;
                         temp_points=0;
+                        cout << "team 1 points "<< team1points << " team 2 points " << team2points << endl;
+                        
                         break;
                     }
                 }
               
                 }
                 if(team1fails==3){
+                cout << "team 2 takes over" << endl;
                     string a1=getanswer(4);
                     if(reveal_answer(q_nr,check_answer(q_nr,a1))!=-1){
+                    cout << "team 2 gets " << temp_points << endl;
                         team2points+=temp_points;
                         temp_points=0;
+                        cout << "team 1 points "<< team1points << " team 2 points " << team2points << endl;
                     }
                     else{
+                    cout << "team 1 gets " << temp_points << endl;
                         team1points+=temp_points;
                         temp_points=0;
+                        cout << "team 1 points "<< team1points << " team 2 points " << team2points << endl;
                     }
     
                 }
@@ -496,6 +510,7 @@ class Game {
                 }
         
         else{
+        cout << "team 2 takes after button" << endl;
             int responding=3;
             while(team2fails<3){
                 senddata();
@@ -503,28 +518,36 @@ class Game {
                 if(reveal_answer(q_nr,check_answer(q_nr,a1))==-1)
                 team2fails++;
                 else{
+                cout << "correct anser for team 2: " << a1 << "team 2 fails: " << team2fails << endl;
                     int j=0;
                     for(int i=1; i<6; i++){
                         if(correctanswers[i]==1){
                         j++;
                         }}
                         if(j==5){
+                        cout << "team 2 gets " << temp_points << endl;
                             team2points+=temp_points;
                             temp_points=0;
+                            cout << "team 1 points "<< team1points << " team 2 points " << team2points << endl;
                             break;
                         }
                     }
                     senddata();
                 }
                 if(team2fails==3){
+                cout << "team 1 takes over" << endl;
                     string a1=getanswer(1);
                     if(reveal_answer(q_nr,check_answer(q_nr,a1))!=-1){
+                    cout << "team 1 gets " << temp_points << endl;
                         team1points+=temp_points;
                         temp_points=0;
+                        cout << "team 1 points "<< team1points << " team 2 points " << team2points << endl;
                     }
                     else{
+                    cout << "team 2 gets " << temp_points << endl;
                         team2points+=temp_points;
                         temp_points=0;
+                        cout << "team 1 points "<< team1points << " team 2 points " << team2points << endl;
                     }
     
                 } senddata();
@@ -532,10 +555,13 @@ class Game {
         round++;
         }
          
-         if(team1points>team2points)
+         if(team1points>team2points){
           cout<< "Team 1 wins" << endl;
-            else
+          responding=-1;}
+            else{
             cout<< "Team 2 wins" << endl;
+            }
+            
          return 0;
         }
         
