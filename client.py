@@ -173,9 +173,13 @@ def sendNickname(nickname):
     f = open("nickname.txt", "w")
     f.write(nickname)
     f.close()
-    # subprocess.Popen([os.getcwd() + "/client.exe"])
+    subprocess.Popen([os.getcwd() + "/client3.exe"])
 
-def gameOver(winner: bool):
+def gameOver(blueWon: bool):
+    if info["playerID"] in (1,2,3) and blueWon:
+        winner = True
+    else:
+        winner = False
     layouts["gameOver"] = [[sg.Text("You won!" if winner else "You lost!")],
                           [sg.Button("Exit")]]
 
@@ -218,6 +222,10 @@ def main():
 
         if info["playerID"] == info["answering"]:
             answerWindow()
+        if info["answering"] == -1:
+            gameOver(True)
+        if info["answering"] == -2:
+            gameOver(False)
 
     mainWindow.close()
 
