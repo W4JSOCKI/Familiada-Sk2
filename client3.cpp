@@ -87,7 +87,7 @@ int main()
             filein.open("in.txt");
             for (int i = 0; i<20; i++)
             {
-                sleep(1000);
+                sleep(1);
                 filein.seekg(0, filein.beg);
                 string tmp;
                 getline(filein, tmp);

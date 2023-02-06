@@ -7,6 +7,7 @@
 #include <fstream>
 #include <algorithm>
 #include <string>
+#include <stdio.h>
 
 
 const int MAX_CLIENTS = 6;
@@ -15,6 +16,7 @@ const int MAX_EVENTS = MAX_CLIENTS + 1;
 const std::string FILENAME = "answertmp.txt";
 using namespace std;
 int in;
+FILE *fp;
 
 void save_to_file(int client_fd) {
     std::ofstream file;
@@ -50,13 +52,15 @@ cout << "weszł" << endl;
     int i=0;
     for (int client_fd : clients) {
         int sent_bytes = 0;
-        std::string file_buffer_id= std::to_string(i)+"/n"+file_buffer;
+        i++;
+        std::string file_buffer_id= std::to_string(i)+"\n"+file_buffer;
+        char*file_buffer_idc=(char*)file_buffer_id.c_str();
         file_size=file_buffer_id.size();
         while (sent_bytes < file_size) {
-            sent_bytes += send(client_fd, file_buffer, file_size, 0);
+            sent_bytes += send(client_fd, file_buffer_idc, file_size, 0);
             cout << file_buffer << endl;
-           cout << *file_buffer + sent_bytes << endl;
-           cout << file_buffer + sent_bytes << endl;
+         
+        
         }
     }
     file.close();
@@ -157,7 +161,17 @@ int main()
                         return 1;
                     }
                 }
+                const string pp="./server_1.0.exe "+nicknames[0]+" "+nicknames[1]+" "+nicknames[2]+" "+nicknames[3]+" "+nicknames[4]+" "+nicknames[5];
+                const char* pp1=pp.c_str();
+                
+                fp=popen(pp1,"r");
+                sleep(3);
                 cout << "xDD" << endl;
+                 send_file_to_clients(clients,"out.txt");
+                cout << "XDDD" << endl;
+                
+                
+                
                 if (client_fd < 0)
                 {
                     std::cerr << "Failed to accept connection" << std::endl;
