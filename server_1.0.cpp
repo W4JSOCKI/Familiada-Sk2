@@ -326,6 +326,10 @@ class Game {
         wronganwers[5]="-----";
         wronganwers[6]="-----";
         wronganwers[7]="-----";
+        
+        //reset fails
+        team1fails=0;
+        team2fails=0;
 
     }
     
