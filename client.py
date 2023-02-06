@@ -176,7 +176,7 @@ def sendNickname(nickname):
     subprocess.Popen([os.getcwd() + "/client3.exe"])
 
 def gameOver(blueWon: bool):
-    if info["playerID"] in (1,2,3) and blueWon:
+    if (info["playerID"] in (1,2,3) and blueWon) or (info["playerID"] in (4,5,6) and not blueWon):
         winner = True
     else:
         winner = False
