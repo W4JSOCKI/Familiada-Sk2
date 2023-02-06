@@ -74,6 +74,12 @@ def createLayouts():
                              [sg.Text("                                                                                                  ")],
                              [sg.Button('Exit')]]
 
+def setupInTxt():
+    f = open("in.txt", "w")
+    f2 = open("in_template", "r")
+    text = f2.read()
+    f.write(text)
+
 
 def getPlayerColor(id):
     if id == info["answering"]:
@@ -192,6 +198,8 @@ def gameOver(blueWon: bool):
 
 def main():
     global mainWindow
+
+    setupInTxt()
 
     loginWindow = sg.Window("Login", layouts["getNicknameLayout"], finalize=True)
     loginWindow["inputNickname"].bind("<Return>", "_Enter")
