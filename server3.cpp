@@ -7,7 +7,7 @@
 #include <fstream>
 
 
-const int MAX_CLIENTS = 2;
+const int MAX_CLIENTS = 6;
 const int PORT = 3333;
 const int MAX_EVENTS = MAX_CLIENTS + 1;
 const std::string FILENAME = "answertmp.txt";

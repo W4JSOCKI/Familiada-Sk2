@@ -221,7 +221,7 @@ class Game {
     string answers_to_send [6];
     string wronganwers[7];
     int wronganwers_counter=0;
-    int correctanswers[6];
+    int correctanswers[7];
     
   public:  Game(int newid,string nick1,string nick2,string nick3,string nick4,string nick5,string nick6){
         id=newid;
@@ -309,12 +309,13 @@ class Game {
         answers_to_send[4]="4. -----";
         answers_to_send[5]="5. -----";
         //reset correct answers
-        correctanswers[0]=0;
+        
         correctanswers[1]=0; 
         correctanswers[2]=0;
         correctanswers[3]=0;
         correctanswers[4]=0;
         correctanswers[5]=0;
+        correctanswers[6]=0;
 
         //reset wrong answers
         wronganwers[0]="-----";
@@ -339,7 +340,7 @@ class Game {
             }
             else return r;
         }
-   
+        return -1;
     }   
     
     public: int addplayer(Player NewPlayer){
@@ -426,7 +427,7 @@ class Game {
                 return 1;
                 else if(res2!=-1)
                 return 2;
-                else return 1;
+                
     
             }
             else if(reveal_answer(q_nr,check_answer(q_nr,a1))!=-1)
@@ -543,9 +544,9 @@ class Game {
  
 
 
-int main()
+int main(int argc, char *argv[])
 {   srand( time( NULL ) );
-    Game test(1,"Hutnor","szbanek","Irssus","Pandzica","Voyager","Makary");
+    Game test(1,argv[1],argv[2],argv[3],argv[4],argv[5],argv[6]);
     // Player player1(1);
     // Player player2(2);
     // Player player3(3);
