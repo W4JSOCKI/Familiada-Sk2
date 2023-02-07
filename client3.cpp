@@ -8,6 +8,7 @@
 using namespace std;
 int PORT = 3333;
 bool answered = false;
+
 void send_file_to_server(int sock, const string &filename)
 {
     std::ifstream file;
@@ -54,6 +55,8 @@ return line1 == line13;
 
 int main()
 {
+    std::ofstream debug;
+    debug.open("debug.txt");
     int sock = socket(AF_INET, SOCK_STREAM, 0);
     if (sock < 0)
     {
@@ -92,7 +95,7 @@ int main()
         }
         else if (compareLines("in.txt")) 
         {
-            
+            debug << "waiting for client.py" << endl;
             for (int i = 0; i<120; i++)
             {
                 sleep(1);
@@ -105,6 +108,8 @@ int main()
                     send_file_to_server(sock, "answer.txt");
                     answer = tmp;
                     answered = true;
+                    filein.close();
+                    debug << "send" << endl;
                     break;
                 }
                 filein.close();
