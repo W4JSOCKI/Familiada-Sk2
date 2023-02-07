@@ -163,15 +163,15 @@ def answerWindow():
         answerWindow["timeLeft"].update(currTime)
         event, values = answerWindow.read(timeout=10)
         if event in ('Ok', "answer" + "_Enter") or currTime<=0:
-            giveAnswer(values["answer"], currTime)
+            giveAnswer(values["answer"])
             break
 
     answerWindow.close()
 
 
-def giveAnswer(answer, timeleft):
+def giveAnswer(answer):
     f = open("answer.txt", "w")
-    f.write(str(answer) + "\n" + str(timeleft))
+    f.write(str(answer) + "\n" + str(info["playerID"]))
     f.close()
 
 
