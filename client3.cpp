@@ -7,6 +7,7 @@
 
 using namespace std;
 int PORT = 3333;
+bool answered = false;
 void send_file_to_server(int sock, const string &filename)
 {
     std::ifstream file;
@@ -82,12 +83,20 @@ int main()
     filein.close();
     while (1)
     {
-        if (compareLines("in.txt")) 
+        if (answered)
         {
-            filein.open("in.txt");
+            if (!compareLines("in.txt"))
+            {
+                answered = false;
+            }
+        }
+        else if (compareLines("in.txt")) 
+        {
+            
             for (int i = 0; i<120; i++)
             {
                 sleep(1);
+                filein.open("in.txt");
                 filein.seekg(0, filein.beg);
                 string tmp;
                 getline(filein, tmp);
@@ -95,9 +104,10 @@ int main()
                 {
                     send_file_to_server(sock, "answer.txt");
                     answer = tmp;
+                    answered = true;
                     break;
                 }
-                
+                filein.close();
             }
         }
         

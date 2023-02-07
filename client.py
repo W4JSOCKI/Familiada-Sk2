@@ -120,6 +120,8 @@ def reload():
         else:
             info[x] = lines[i]
         i+=1
+    if info["playerID"] == 40:
+        info["playerID"] = 4
 
 
 def refresh():
