@@ -4,14 +4,14 @@ b
 c
 d
 e
-f
+fa
 1
 0
 0
 0
 0
-3
-Name Something Karaoke Singers Use For Help, But A Real Singer Shouldn’t Need.
+1
+Tell Me An Excuse You’d Use To Avoid Singing At A Karaoke Club.
 1. -----
 2. -----
 3. -----

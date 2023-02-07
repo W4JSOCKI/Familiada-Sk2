@@ -3,6 +3,9 @@ import time
 import subprocess
 import os
 
+answered = False
+correct_before = []
+
 info = {
     "playerID": -1,
     "nick1": "n1",
@@ -80,6 +83,12 @@ def setupInTxt():
     text = f2.read()
     f.write(text)
 
+def tryAnswering():
+    global answered
+    if info["playerID"] != info["answering"]:
+        answered = False
+    if getCorrect() != correct_before:
+        answered = False
 
 def getPlayerColor(id):
     if id == info["answering"]:
@@ -96,6 +105,9 @@ def getPlayerColor(id):
 
 def getNicknames():
     return [info['nick1'], info['nick2'], info['nick3'], info['nick4'], info['nick5'], info['nick6']]
+
+def getCorrect():
+    return [info["correct1"], info["correct2"], info["correct3"], info["correct4"], info["correct5"]]
 
 
 def reload():
@@ -146,9 +158,11 @@ def refresh():
     mainWindow["wrong7"].update(info["wrong7"])
 
 def answerWindow():
-
+    global correct_before, answered
+    answered = True
+    correct_before = getCorrect()
     timeStart = time.time()
-    timeLeft = 15
+    timeLeft = 120
     currTime = timeLeft
     layouts["answerLayout"] = [[sg.Text(info["question"], key="question")],
                                [sg.Text("Time left:"), sg.Text(timeLeft, key="timeLeft")],
@@ -163,23 +177,24 @@ def answerWindow():
         answerWindow["timeLeft"].update(currTime)
         event, values = answerWindow.read(timeout=10)
         if event in ('Ok', "answer" + "_Enter") or currTime<=0:
-            giveAnswer(values["answer"], currTime)
+            giveAnswer(values["answer"])
             break
 
     answerWindow.close()
 
 
-def giveAnswer(answer, timeleft):
+def giveAnswer(answer):
     f = open("answer.txt", "w")
-    f.write(str(answer) + "\n" + str(timeleft))
+    f.write(str(answer) + "\n" + str(info["playerID"]))
     f.close()
 
 
 def sendNickname(nickname):
+    global cpp_client
     f = open("nickname.txt", "w")
     f.write(nickname)
     f.close()
-    subprocess.Popen([os.getcwd() + "/client3.exe"])
+    cpp_client = subprocess.Popen([os.getcwd() + "/client3.exe"])
 
 def gameOver(blueWon: bool):
     if (info["playerID"] in (1,2,3) and blueWon) or (info["playerID"] in (4,5,6) and not blueWon):
@@ -228,13 +243,16 @@ def main():
         reload()
         refresh()
 
-        if info["playerID"] == info["answering"]:
+        if answered:
+            tryAnswering()
+        elif info["playerID"] == info["answering"]:
             answerWindow()
         if info["answering"] == -1:
             gameOver(True)
         if info["answering"] == -2:
             gameOver(False)
 
+    cpp_client.kill()
     mainWindow.close()
 
 

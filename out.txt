@@ -1,23 +1,23 @@
 a
 b
 c
-e
-f
 d
+e
+fa
 1
 0
 0
 0
 0
-3
-What Might A Hitchhiker Take With Him, In Order To Seem Less Dangerous?
+2
+Tell Me An Excuse You’d Use To Avoid Singing At A Karaoke Club.
 1. -----
 2. -----
 3. -----
 4. -----
 5. -----
------
------
+Swing
+Chairs
 -----
 -----
 -----

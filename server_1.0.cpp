@@ -167,16 +167,7 @@ void sendToAllBut(int fd, char * buffer, int count){
 }
 */
 
-string getanswer(int p_nr) // temp function
-{
 
-    string ans;
-    ifstream answer;
-    while ()
-        answer.open("answertmp.txt");
-    getline(cin, ans);
-    return ans;
-}
 
 class Player
 {
@@ -262,23 +253,34 @@ public:
     string answers[1001][6];
     int pointvalue[1001][6]; // points for each answer
     string pointstring[1001][6];
-    int previous_ans_id = 0;
+    string previous_ans_id = "-1";
 
     string getanswer(int p_nr) // temp function
     {
-        int newid;
+        
         string ans;
+        string snewid;
         ifstream answer;
-
+	int i =0;
+	string pn=to_string(p_nr);
         do
         {
             sleep(1);
             answer.open("answertmp.txt");
             getline(answer, ans);
-            getline(answer, newid);
+            getline(answer, snewid);
             answer.close();
-        } while (newid == previous_ans_id)
-        previous_ans_id = newid;
+            i++;
+           
+           if(i==120)
+           {
+        ans=pn+" not responded";
+        break;
+        }
+           
+        } while (snewid == previous_ans_id);
+        previous_ans_id = snewid;
+        
 
             return ans;
     }
@@ -322,7 +324,7 @@ public:
         file << team2points << endl;
         file << team1fails << endl;
         file << team2fails << endl;
-        file << responding << endl;
+        file << responding+1 << endl;
         for (int i = 0; i < 6; i++)
             file << answers_to_send[i] << endl;
 
@@ -567,7 +569,7 @@ public:
             else
             {
                 cout << "team 2 takes after button" << endl;
-                int responding = 3;
+                int responding = 39;
                 while (team2fails < 3)
                 {
                     senddata();

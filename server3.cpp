@@ -19,6 +19,15 @@ int in;
 FILE *fp;
 
 void save_to_file(int client_fd) {
+
+	
+    char buffer[1024] = {0};
+    int valread = read(client_fd, buffer, 1024);
+    if (valread < 0) {
+        std::cerr << "Failed to read data from client" << std::endl;
+        return;
+    }
+    cout << "answer from " << client_fd << " "<< buffer << endl;
     std::ofstream file;
     file.open("answertmp.txt", std::ios::out | std::ios::trunc);
     if (!file.is_open()) {
@@ -26,12 +35,7 @@ void save_to_file(int client_fd) {
         return;
     }
     // read data from client_fd
-    char buffer[1024] = {0};
-    int valread = read(client_fd, buffer, 1024);
-    if (valread < 0) {
-        std::cerr << "Failed to read data from client" << std::endl;
-        return;
-    }
+   
     file << buffer;
     file.close();
 }
@@ -70,6 +74,11 @@ cout << "weszł" << endl;
 
 int main()
 {
+	std::ofstream file;
+	file.open("answertmp.txt", std::ios::out | std::ios::trunc);
+	file << "empty" << endl;
+	file << "-1";
+	file.close();
     int server_fd, client_fd, epoll_fd;
     struct sockaddr_in address;
     int opt = 1;
@@ -199,7 +208,7 @@ int main()
                 
                 save_to_file(events[i].data.fd);
     
-                send_file_to_clients(clients,"ramka.txt");
+                send_file_to_clients(clients,"out.txt");
                 if (done)
                 {
                     std::cout << "Closing connection with client " << client_index + 1 << std::endl;
