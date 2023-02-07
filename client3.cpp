@@ -81,7 +81,7 @@ int main()
 
     send_file_to_server(sock, "nickname.txt");
     string answer;
-    ifstream filein("in.txt");
+    ifstream filein("answer.txt");
     getline(filein, answer);
     filein.close();
     while (1)
@@ -99,7 +99,7 @@ int main()
             for (int i = 0; i<120; i++)
             {
                 sleep(1);
-                filein.open("in.txt");
+                filein.open("answer.txt");
                 filein.seekg(0, filein.beg);
                 string tmp;
                 getline(filein, tmp);
@@ -130,8 +130,8 @@ int main()
             file.write(buffer, valread);
         }
         file.close();
-
+        
     }
-
+    debug.close();
     return 0;
 }
