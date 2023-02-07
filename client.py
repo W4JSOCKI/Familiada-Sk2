@@ -3,6 +3,9 @@ import time
 import subprocess
 import os
 
+answered = False
+correct_before = []
+
 info = {
     "playerID": -1,
     "nick1": "n1",
@@ -80,6 +83,12 @@ def setupInTxt():
     text = f2.read()
     f.write(text)
 
+def tryAnswering():
+    global answered
+    if info["playerID"] != info["answering"]:
+        answered = False
+    if getCorrect() != correct_before:
+        answered = False
 
 def getPlayerColor(id):
     if id == info["answering"]:
@@ -96,6 +105,9 @@ def getPlayerColor(id):
 
 def getNicknames():
     return [info['nick1'], info['nick2'], info['nick3'], info['nick4'], info['nick5'], info['nick6']]
+
+def getCorrect():
+    return [info["correct1"], info["correct2"], info["correct3"], info["correct4"], info["correct5"]]
 
 
 def reload():
@@ -146,7 +158,9 @@ def refresh():
     mainWindow["wrong7"].update(info["wrong7"])
 
 def answerWindow():
-
+    global correct_before, answered
+    answered = True
+    correct_before = getCorrect()
     timeStart = time.time()
     timeLeft = 120
     currTime = timeLeft
@@ -229,7 +243,9 @@ def main():
         reload()
         refresh()
 
-        if info["playerID"] == info["answering"]:
+        if answered:
+            tryAnswering()
+        elif info["playerID"] == info["answering"]:
             answerWindow()
         if info["answering"] == -1:
             gameOver(True)
