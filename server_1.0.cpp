@@ -173,7 +173,7 @@ public:
         }
         baza.close();
     }
-    void senddata()
+    void senddata(int res)
     {
         ofstream file;
         file.open("out.txt");
@@ -186,7 +186,7 @@ public:
         file << team2points << endl;
         file << team1fails << endl;
         file << team2fails << endl;
-        file << responding+1 << endl;
+        file << res+1 << endl;
         for (int i = 0; i < 6; i++)
             file << answers_to_send[i] << endl;
 
@@ -330,10 +330,10 @@ public:
         for (int i = 0; i < 3; i++)
         {
             responding = clash_player_1;
-            senddata();
+            senddata(responding);
             string a1 = getanswer(clash_player_1);
             responding = clash_player_2;
-            senddata();
+            senddata(responding);
             string a2 = getanswer(clash_player_2);
             if (a1 != a2)
             {
@@ -382,7 +382,7 @@ public:
                 int responding = 0;
                 while (team1fails < 3)
                 {
-                    senddata();
+                    senddata(responding);
                     string a1 = getanswer(responding); 
                     if (reveal_answer(q_nr, check_answer(q_nr, a1)) == -1)
                         team1fails++;
@@ -413,7 +413,7 @@ public:
                 {
                     cout << "team 2 takes over" << endl;
                     responding = 3;
-                    senddata();
+                    senddata(responding);
                     string a1 = getanswer(3);
                     if (reveal_answer(q_nr, check_answer(q_nr, a1)) != -1)
                     {
@@ -430,7 +430,7 @@ public:
                         cout << "team 1 points " << team1points << " team 2 points " << team2points << endl;
                     }
                 }
-                senddata();
+                senddata(responding);
             }
             else
             {
@@ -438,7 +438,7 @@ public:
                 int responding = 39;
                 while (team2fails < 3)
                 {
-                    senddata();
+                    senddata(responding);
                     string a1 = getanswer(responding);
                     if (reveal_answer(q_nr, check_answer(q_nr, a1)) == -1)
                         team2fails++;
@@ -463,13 +463,13 @@ public:
                         }
                     }
                     responding = (responding + 1) % 3 + 3;
-                    senddata();
+                    senddata(responding);
                 }
                 if (team2fails == 3)
                 {   
                     responding = 0;
                     cout << "team 1 takes over" << endl;
-                    senddata();
+                    senddata(responding);
                     string a1 = getanswer(0);
                     if (reveal_answer(q_nr, check_answer(q_nr, a1)) != -1)
                     {
@@ -486,7 +486,7 @@ public:
                         cout << "team 1 points " << team1points << " team 2 points " << team2points << endl;
                     }
                 }
-                senddata();
+                senddata(responding);
             }
             round++;
         }
