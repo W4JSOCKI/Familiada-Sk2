@@ -175,9 +175,9 @@ int main()
                 
                 fp=popen(pp1,"r");
                 sleep(3);
-                cout << "xDD" << endl;
+                cout << "b" << endl;
                  send_file_to_clients(clients,"out.txt");
-                cout << "XDDD" << endl;
+                cout << "a" << endl;
                 
                 
                 
@@ -207,7 +207,7 @@ int main()
                 }
                 
                 save_to_file(events[i].data.fd);
-    
+    		sleep(3);
                 send_file_to_clients(clients,"out.txt");
                 if (done)
                 {
