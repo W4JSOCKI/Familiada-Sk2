@@ -3,22 +3,22 @@ b
 c
 d
 e
-fa
+f
 1
 0
 0
 0
 0
-2
-Tell Me An Excuse You’d Use To Avoid Singing At A Karaoke Club.
+5
+Name Something You Shouldn’t Do After Getting A Manicure
 1. -----
 2. -----
 3. -----
 4. -----
-5. -----
-Swing
-Chairs
------
+5. Eat 15
+Swim
+a
+b
 -----
 -----
 -----
