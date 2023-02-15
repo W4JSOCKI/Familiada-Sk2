@@ -120,9 +120,9 @@ def reload():
         else:
             info[x] = lines[i]
         i+=1
-    if info["playerID"] == 40:
+    if info["answering"] == 40:
         tryAnswering()
-        info["playerID"] = 4
+        info["answering"] = 4
 
 
 def refresh():
@@ -172,7 +172,7 @@ def answerWindow():
                                [sg.Text("Answer:"), sg.InputText(key="answer")],
                                [sg.Button('Ok')]]
 
-    answerWindow = sg.Window("Answer", layouts["answerLayout"], modal=True, finalize=True, disable_close=True)
+    answerWindow = sg.Window("Answer player" + info["playerID"], layouts["answerLayout"], modal=True, finalize=True, disable_close=True)
     answerWindow["answer"].bind("<Return>", "_Enter")
 
     while True:
