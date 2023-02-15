@@ -111,7 +111,7 @@ def getCorrect():
 
 
 def reload():
-    f = open("in.txt", "r")
+    f = open("in.txt", "r", encoding="utf-8")
     lines = f.read().split("\n")
     i=0
     for x in info.keys():
@@ -121,6 +121,7 @@ def reload():
             info[x] = lines[i]
         i+=1
     if info["playerID"] == 40:
+        tryAnswering()
         info["playerID"] = 4
 
 
@@ -164,7 +165,7 @@ def answerWindow():
     answered = True
     correct_before = getCorrect()
     timeStart = time.time()
-    timeLeft = 120
+    timeLeft = 100
     currTime = timeLeft
     layouts["answerLayout"] = [[sg.Text(info["question"], key="question")],
                                [sg.Text("Time left:"), sg.Text(timeLeft, key="timeLeft")],
@@ -247,7 +248,9 @@ def main():
 
         if answered:
             tryAnswering()
+            print("tryAnswering")
         elif info["playerID"] == info["answering"]:
+            print("answerWindow")
             answerWindow()
         if info["answering"] == -1:
             gameOver(True)

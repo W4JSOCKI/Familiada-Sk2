@@ -96,7 +96,7 @@ int main()
         else if (compareLines("in.txt")) 
         {
             debug << "waiting for client.py" << endl;
-            for (int i = 0; i<120; i++)
+            for (int i = 0; i<100; i++)
             {
                 sleep(1);
                 filein.open("answer.txt");
