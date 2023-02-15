@@ -212,6 +212,7 @@ def gameOver(blueWon: bool):
     while True:
         event, values = gameOverWindow.read()
         if event in (sg.WIN_CLOSED, 'Exit'):
+            cpp_client.kill()
             exit()
 
 def main():
