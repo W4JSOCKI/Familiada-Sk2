@@ -2,9 +2,9 @@ import PySimpleGUI as sg
 import time
 import subprocess
 import os
-from bs4 import UnicodeDammit
 
 answered = False
+forty = False
 correct_before = []
 
 info = {
@@ -85,11 +85,15 @@ def setupInTxt():
     f.write(text)
 
 def tryAnswering():
+    global forty
     global answered
     if info["playerID"] != info["answering"]:
         answered = False
+        if info["answering"] != 40:
+            forty = False
     if getCorrect() != correct_before:
         answered = False
+
 
 def getPlayerColor(id):
     if id == info["answering"]:
@@ -112,8 +116,11 @@ def getCorrect():
 
 
 def reload():
-    f = open("in.txt", "r", encoding="utf-8")
-    lines = UnicodeDammit(f.read(), ["utf-8"]).unicode_markup.split("\n")
+    global forty
+    f = open("in.txt", "rb")
+    bytes_data = f.read()
+    utf8_data = bytes_data.decode('utf-8', errors='ignore')
+    lines = utf8_data.split("\n")
     i=0
     for x in info.keys():
         if x in ("playerID", "roundNumber", "t1Points", "t2Points", "t1Errors", "t2Errors", "answering"):
@@ -122,7 +129,9 @@ def reload():
             info[x] = lines[i]
         i+=1
     if info["answering"] == 40:
-        tryAnswering()
+        if not forty:
+            forty = True
+            tryAnswering()
         info["answering"] = 4
 
 
@@ -248,7 +257,7 @@ def main():
         event, values = mainWindow.read(timeout=500)
         if event in (sg.WIN_CLOSED, 'Exit'):
             break
-
+        
         reload()
         refresh()
 
