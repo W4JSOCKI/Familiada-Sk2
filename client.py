@@ -2,6 +2,7 @@ import PySimpleGUI as sg
 import time
 import subprocess
 import os
+from bs4 import UnicodeDammit
 
 answered = False
 correct_before = []
@@ -112,7 +113,7 @@ def getCorrect():
 
 def reload():
     f = open("in.txt", "r", encoding="utf-8")
-    lines = f.read().split("\n")
+    lines = UnicodeDammit(f.read(), ["utf-8"]).unicode_markup.split("\n")
     i=0
     for x in info.keys():
         if x in ("playerID", "roundNumber", "t1Points", "t2Points", "t1Errors", "t2Errors", "answering"):
@@ -176,7 +177,7 @@ def answerWindow():
                                [sg.Text("Answer:"), sg.InputText(key="answer")],
                                [sg.Button('Ok')]]
 
-    answerWindow = sg.Window("Answer player" + info["playerID"], layouts["answerLayout"], modal=True, finalize=True, disable_close=True)
+    answerWindow = sg.Window("Answer player" + str(info["playerID"]), layouts["answerLayout"], modal=True, finalize=True, disable_close=True)
     answerWindow["answer"].bind("<Return>", "_Enter")
 
     while True:
