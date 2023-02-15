@@ -128,10 +128,18 @@ def reload():
         else:
             info[x] = lines[i]
         i+=1
+    f.close()
     if info["answering"] == 40:
         if not forty:
             forty = True
             tryAnswering()
+        f.open("in.txt", "w")
+        for i in range(len(lines)):
+            if i == 12:
+                f.write("4" + "\n")
+            else:
+                f.write(lines[i] + "\n")
+        f.close()
         info["answering"] = 4
 
 
