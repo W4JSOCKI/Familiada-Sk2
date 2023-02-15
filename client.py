@@ -165,7 +165,11 @@ def answerWindow():
     answered = True
     correct_before = getCorrect()
     timeStart = time.time()
-    timeLeft = 100
+
+
+    timeLeft = 75
+
+
     currTime = timeLeft
     layouts["answerLayout"] = [[sg.Text(info["question"], key="question")],
                                [sg.Text("Time left:"), sg.Text(timeLeft, key="timeLeft")],
