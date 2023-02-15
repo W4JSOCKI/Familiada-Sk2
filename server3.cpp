@@ -8,19 +8,19 @@
 #include <algorithm>
 #include <string>
 #include <stdio.h>
+#include <sys/time.h>
 
 
 const int MAX_CLIENTS = 6;
 const int PORT = 3333;
 const int MAX_EVENTS = MAX_CLIENTS + 1;
 const std::string FILENAME = "answertmp.txt";
+
 using namespace std;
 int in;
 FILE *fp;
 
-struct timeval timeout;
-timeout.tv_sec = 120;
-timeout.tv_usec = 0;
+
 
 void save_to_file(int client_fd) {
 
@@ -44,7 +44,7 @@ void save_to_file(int client_fd) {
     file.close();
 }
 
-void send_file_to_clients(std::vector<int> &clients, std::string file_name) {
+void send_file_to_clients(std::vector<int> &clients,std::vector<int> &clientids, std::string file_name) {
 cout << "weszł" << endl;
     std::ifstream file;
     file.open(file_name, std::ios::binary);
@@ -60,15 +60,19 @@ cout << "weszł" << endl;
     int i=0;
     for (int client_fd : clients) {
         int sent_bytes = 0;
-        i++;
+        
         std::string file_buffer_id= std::to_string(clientids[i])+"\n"+file_buffer;
+        i++;
+        if(file_buffer_id.back()=='\xd1')
+        {file_buffer_id.pop_back();}
+        
         char*file_buffer_idc=(char*)file_buffer_id.c_str();
         file_size=file_buffer_id.size();
-        while (sent_bytes < file_size) {
+       // while (sent_bytes < file_size) {
             sent_bytes += send(client_fd, file_buffer_idc, file_size, 0);
             cout << file_buffer << endl;
 
-        }
+        //}
     }
     file.close();
     delete[] file_buffer;
@@ -88,6 +92,7 @@ int main()
     int addrlen = sizeof(address);
     std::vector<int> clients;
     std::vector<int> clientids;
+  
     std::vector<string>nicknames;
     struct epoll_event event;
     struct epoll_event *events;
@@ -143,10 +148,10 @@ int main()
 
     while (true)
     {	
-        int n = epoll_wait(epoll_fd, events, MAX_EVENTS, timeout);
+        int n = epoll_wait(epoll_fd, events, MAX_EVENTS, 90000);
         for (int i = 0; i < n; i++)
         {		cout << "XD"<< endl;
-            if ((events[i].events & EPOLLERR) || (events[i].events & EPOLLHUP) )//(!(events[i].events & EPOLLIN)))
+            if ((events[i].events & EPOLLERR) || (events[i].events & EPOLLHUP) || (!(events[i].events & EPOLLIN)))
             {
             
                 std::cerr << "Error on epoll wait" << std::endl;
@@ -154,7 +159,6 @@ int main()
                 continue;
             }
             else if (server_fd == events[i].data.fd && clients.size() < MAX_CLIENTS)
-            {
             {	
             cout << "2" << endl;
              
@@ -174,13 +178,20 @@ int main()
                         return 1;
                     }
                 }
+                cout << clientids[0] << endl;
+                cout << clientids[1] << endl;
+                cout << clientids[2] << endl;
+                cout << clientids[3] << endl;
+                cout << clientids[4] << endl;
+                cout << clientids[5] << endl;
+         
                 const string pp="./server_1.0.exe "+nicknames[0]+" "+nicknames[1]+" "+nicknames[2]+" "+nicknames[3]+" "+nicknames[4]+" "+nicknames[5];
                 const char* pp1=pp.c_str();
                 
                 fp=popen(pp1,"r");
                 sleep(3);
                 cout << "b" << endl;
-                 send_file_to_clients(clients,"out.txt");
+                 send_file_to_clients(clients,clientids,"out.txt");
                 cout << "a" << endl;
                 
                 
@@ -207,13 +218,14 @@ int main()
 
                 if (client_index < 0)
                 {
-                   send_file_to_clients(clients,"out.txt");
-                }else
-                {
+                cout << "Failed to find index" << endl;
+                   return 1;
+                }
+                
                     save_to_file(events[i].data.fd);
     		        sleep(3);
-                    send_file_to_clients(clients,"out.txt");
-                }
+                    send_file_to_clients(clients,clientids,"out.txt");
+                
                 
                 
                 if (done)
@@ -223,6 +235,13 @@ int main()
                 }
             }
         }
+        if(n==0)
+        {
+        sleep(3);
+        send_file_to_clients(clients,clientids,"out.txt");
+        }
+        
+        
     }
     free(events);
     close(server_fd);

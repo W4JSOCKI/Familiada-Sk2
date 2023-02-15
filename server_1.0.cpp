@@ -134,7 +134,7 @@ public:
             answer.close();
             i++;
            
-           if(i==120)
+           if(i==90)
            {
         ans=pn+" not responded";
         break;

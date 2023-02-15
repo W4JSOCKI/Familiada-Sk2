@@ -164,7 +164,11 @@ def answerWindow():
     answered = True
     correct_before = getCorrect()
     timeStart = time.time()
+<<<<<<< Updated upstream
     timeLeft = 120
+=======
+    timeLeft = 75
+>>>>>>> Stashed changes
     currTime = timeLeft
     layouts["answerLayout"] = [[sg.Text(info["question"], key="question")],
                                [sg.Text("Time left:"), sg.Text(timeLeft, key="timeLeft")],

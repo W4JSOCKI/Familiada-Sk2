@@ -96,11 +96,7 @@ int main()
         else if (compareLines("in.txt")) 
         {
             debug << "waiting for client.py" << endl;
-<<<<<<< Updated upstream
             for (int i = 0; i<120; i++)
-=======
-            for (int i = 0; i<75; i++)
->>>>>>> Stashed changes
             {
                 sleep(1);
                 filein.open("answer.txt");
