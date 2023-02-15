@@ -61,7 +61,7 @@ cout << "weszł" << endl;
     for (int client_fd : clients) {
         int sent_bytes = 0;
         i++;
-        std::string file_buffer_id= std::to_string(clientids[i])+"\n"+file_buffer;
+        std::string file_buffer_id= std::to_string(clientids[i])+"\n"+file_buffer+"\0";
         char*file_buffer_idc=(char*)file_buffer_id.c_str();
         file_size=file_buffer_id.size();
         while (sent_bytes < file_size) {
