@@ -32,31 +32,49 @@ void send_file_to_server(int sock, const string &filename)
     delete[] file_buffer;
 }
 
+int recv_data(int sockfd, char *buf, size_t size) {
+    int total = 0;
+    while (total < size - 1) {
+        int n = recv(sockfd, buf + total, 1, 0);
+        if (n == -1) {
+            return -1;
+        } else if (n == 0) {
+            break;
+        } else {
+            total += n;
+            if (buf[total - 1] == '\0') {
+                break;
+            }
+        }
+    }
+    buf[total] = '\0';
+    
+    return total;
+}
+
 bool compareLines(string filename)
 {
 string line1, line13;
 ifstream file(filename);
 getline(file, line1);
 
-// Skip lines 2-12
+
 for (int i = 2; i <= 12; i++)
 {
     getline(file, line13);
 }
 
-// Read line 13
+
 getline(file, line13);
 
 file.close();
 
-// Compare lines 1 and 13
+
 return line1 == line13;
 }
 
 int main()
 {
-    std::ofstream debug;
-    debug.open("debug.txt");
     int sock = socket(AF_INET, SOCK_STREAM, 0);
     if (sock < 0)
     {
@@ -95,12 +113,11 @@ int main()
         }
         else if (compareLines("in.txt")) 
         {
+
             debug << "waiting for client.py" << endl;
-<<<<<<< Updated upstream
-            for (int i = 0; i<120; i++)
-=======
+
             for (int i = 0; i<75; i++)
->>>>>>> Stashed changes
+      
             {
                 sleep(1);
                 filein.open("answer.txt");
@@ -113,7 +130,6 @@ int main()
                     answer = tmp;
                     answered = true;
                     filein.close();
-                    debug << "send" << endl;
                     break;
                 }
                 filein.close();
@@ -136,6 +152,5 @@ int main()
         file.close();
         
     }
-    debug.close();
     return 0;
 }

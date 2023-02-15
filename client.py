@@ -111,7 +111,7 @@ def getCorrect():
 
 
 def reload():
-    f = open("in.txt", "r")
+    f = open("in.txt", "r", encoding="utf-8")
     lines = f.read().split("\n")
     i=0
     for x in info.keys():
@@ -120,8 +120,9 @@ def reload():
         else:
             info[x] = lines[i]
         i+=1
-    if info["playerID"] == 40:
-        info["playerID"] = 4
+    if info["answering"] == 40:
+        tryAnswering()
+        info["answering"] = 4
 
 
 def refresh():
@@ -164,18 +165,18 @@ def answerWindow():
     answered = True
     correct_before = getCorrect()
     timeStart = time.time()
-<<<<<<< Updated upstream
-    timeLeft = 120
-=======
+
+
     timeLeft = 75
->>>>>>> Stashed changes
+
+
     currTime = timeLeft
     layouts["answerLayout"] = [[sg.Text(info["question"], key="question")],
                                [sg.Text("Time left:"), sg.Text(timeLeft, key="timeLeft")],
                                [sg.Text("Answer:"), sg.InputText(key="answer")],
                                [sg.Button('Ok')]]
 
-    answerWindow = sg.Window("Answer", layouts["answerLayout"], modal=True, finalize=True, disable_close=True)
+    answerWindow = sg.Window("Answer player" + info["playerID"], layouts["answerLayout"], modal=True, finalize=True, disable_close=True)
     answerWindow["answer"].bind("<Return>", "_Enter")
 
     while True:
@@ -215,6 +216,7 @@ def gameOver(blueWon: bool):
     while True:
         event, values = gameOverWindow.read()
         if event in (sg.WIN_CLOSED, 'Exit'):
+            cpp_client.kill()
             exit()
 
 def main():
@@ -251,7 +253,9 @@ def main():
 
         if answered:
             tryAnswering()
+            print("tryAnswering")
         elif info["playerID"] == info["answering"]:
+            print("answerWindow")
             answerWindow()
         if info["answering"] == -1:
             gameOver(True)

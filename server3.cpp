@@ -60,12 +60,10 @@ cout << "weszł" << endl;
     int i=0;
     for (int client_fd : clients) {
         int sent_bytes = 0;
+
         
-        std::string file_buffer_id= std::to_string(clientids[i])+"\n"+file_buffer;
+        std::string file_buffer_id= std::to_string(clientids[i])+"\n"+file_buffer+"\0";
         i++;
-        if(file_buffer_id.back()=='\xd1')
-        {file_buffer_id.pop_back();}
-        
         char*file_buffer_idc=(char*)file_buffer_id.c_str();
         file_size=file_buffer_id.size();
        // while (sent_bytes < file_size) {
