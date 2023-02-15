@@ -499,8 +499,9 @@ public:
         else
         {
             cout << "Team 2 wins" << endl;
+            responding = -2;
         }
-
+        senddata(responding);
         return 0;
     }
 };
