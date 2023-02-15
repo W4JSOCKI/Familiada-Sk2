@@ -494,12 +494,12 @@ public:
         if (team1points > team2points)
         {
             cout << "Team 1 wins" << endl;
-            responding = -1;
+            responding = -2;
         }
         else
         {
             cout << "Team 2 wins" << endl;
-            responding = -2;
+            responding = -3;
         }
         senddata(responding);
         return 0;

@@ -70,7 +70,7 @@ getline(file, line13);
 file.close();
 
 
-return line1 == line13;
+return (line1 == line13 || (line1=="4" && line13=="40"));
 }
 
 int main()
@@ -114,8 +114,7 @@ int main()
         else if (compareLines("in.txt")) 
         {
 
-            debug << "waiting for client.py" << endl;
-
+           
             for (int i = 0; i<75; i++)
       
             {
@@ -139,7 +138,7 @@ int main()
         std::ofstream file;
         char buffer[1024] = {0};
         int valread;
-        if ((valread = recv(sock, buffer, sizeof(buffer), 0)) > 0)
+        if ((valread = recv(sock, buffer, sizeof(buffer),0)) > 0)
         {
             file.open("in.txt", std::ios::binary | std::ios::out | std::ios::trunc);
             if (!file.is_open())

@@ -4,6 +4,7 @@ import subprocess
 import os
 
 answered = False
+forty = False
 correct_before = []
 
 info = {
@@ -84,11 +85,15 @@ def setupInTxt():
     f.write(text)
 
 def tryAnswering():
+    global forty
     global answered
     if info["playerID"] != info["answering"]:
         answered = False
+        if info["answering"] != 40:
+            forty = False
     if getCorrect() != correct_before:
         answered = False
+
 
 def getPlayerColor(id):
     if id == info["answering"]:
@@ -111,8 +116,11 @@ def getCorrect():
 
 
 def reload():
-    f = open("in.txt", "r", encoding="utf-8")
-    lines = f.read().split("\n")
+    global forty
+    f = open("in.txt", "rb")
+    bytes_data = f.read()
+    utf8_data = bytes_data.decode('utf-8', errors='ignore')
+    lines = utf8_data.split("\n")
     i=0
     for x in info.keys():
         if x in ("playerID", "roundNumber", "t1Points", "t2Points", "t1Errors", "t2Errors", "answering"):
@@ -120,9 +128,11 @@ def reload():
         else:
             info[x] = lines[i]
         i+=1
-    if info["playerID"] == 40:
-        tryAnswering()
-        info["playerID"] = 4
+    if info["answering"] == 40:
+        if not forty:
+            forty = True
+            tryAnswering()
+        info["answering"] = 4
 
 
 def refresh():
@@ -165,14 +175,18 @@ def answerWindow():
     answered = True
     correct_before = getCorrect()
     timeStart = time.time()
+
+
     timeLeft = 75
+
+
     currTime = timeLeft
     layouts["answerLayout"] = [[sg.Text(info["question"], key="question")],
                                [sg.Text("Time left:"), sg.Text(timeLeft, key="timeLeft")],
                                [sg.Text("Answer:"), sg.InputText(key="answer")],
                                [sg.Button('Ok')]]
 
-    answerWindow = sg.Window("Answer", layouts["answerLayout"], modal=True, finalize=True, disable_close=True)
+    answerWindow = sg.Window("Answer player" + str(info["playerID"]), layouts["answerLayout"], modal=True, finalize=True, disable_close=True)
     answerWindow["answer"].bind("<Return>", "_Enter")
 
     while True:
@@ -212,6 +226,7 @@ def gameOver(blueWon: bool):
     while True:
         event, values = gameOverWindow.read()
         if event in (sg.WIN_CLOSED, 'Exit'):
+            cpp_client.kill()
             exit()
 
 def main():
@@ -242,7 +257,7 @@ def main():
         event, values = mainWindow.read(timeout=500)
         if event in (sg.WIN_CLOSED, 'Exit'):
             break
-
+        
         reload()
         refresh()
 
